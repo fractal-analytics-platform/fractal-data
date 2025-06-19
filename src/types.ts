@@ -5,6 +5,7 @@ export type AuthorizationScheme =
 
 export type Config = {
   port: number;
+  bindAddress: string;
   fractalServerUrl: string;
   basePath: string;
   vizarrStaticFilesPath: string;

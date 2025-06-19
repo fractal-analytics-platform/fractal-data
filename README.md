@@ -64,6 +64,7 @@ To start the application installed in this way see the section [Run fractal-viza
 ## Environment variables
 
 * `PORT`: the port where fractal-vizarr-viewer app is served;
+* `BIND_ADDRESS`: specifies the IP address for the server to bind to; use `0.0.0.0` (IPv4) or `::` (IPv6) to listen on all interfaces, `127.0.0.1` (IPv4) or `::1` (IPv6) for localhost only; the default value is `0.0.0.0`;
 * `FRACTAL_SERVER_URL`: the base URL of fractal-server;
 * `VIZARR_STATIC_FILES_PATH`: path to the files generated running `npm run build` in vizarr source folder;
 * `BASE_PATH`: base path of fractal-vizarr-viewer application;
@@ -84,6 +85,7 @@ You can create a script with the following content to run fractal-vizarr-viewer 
 #!/bin/sh
 
 export PORT=3000
+export BIND_ADDRESS=0.0.0.0
 export FRACTAL_SERVER_URL=http://localhost:8000
 export VIZARR_STATIC_FILES_PATH=/path/to/vizarr/dist
 export AUTHORIZATION_SCHEME=fractal-server
@@ -145,6 +147,7 @@ After=syslog.target
 [Service]
 User=fractal
 Environment="PORT=3000"
+Environment="BIND_ADDRESS=0.0.0.0"
 Environment="FRACTAL_SERVER_URL=https://fractal-server.example.com/"
 Environment="VIZARR_STATIC_FILES_PATH=/path/to/vizarr/dist"
 Environment="BASE_PATH=/vizarr"

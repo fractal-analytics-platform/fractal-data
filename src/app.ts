@@ -33,7 +33,7 @@ app.use(`${config.basePath}alive`, async function (req, res) {
 app.use(`${config.basePath}`, express.static(config.vizarrStaticFilesPath));
 
 // Start server
-const server = app.listen(config.port, () => {
+const server = app.listen(config.port, config.bindAddress, () => {
   logger.info(
     "fractal-vizarr-viewer is listening at http://localhost:%d%s",
     config.port,

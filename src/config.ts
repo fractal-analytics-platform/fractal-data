@@ -24,6 +24,7 @@ function getRequiredEnv(envName: string) {
  */
 function loadConfig(): Config {
   const port = process.env.PORT ? parseInt(process.env.PORT) : 3000;
+  const bindAddress = process.env.BIND_ADDRESS || "0.0.0.0";
   const fractalServerUrl = getRequiredEnv("FRACTAL_SERVER_URL");
   const vizarrStaticFilesPath = getRequiredEnv("VIZARR_STATIC_FILES_PATH");
 
@@ -59,6 +60,8 @@ function loadConfig(): Config {
     basePath += "/";
   }
 
+  logger.debug("PORT: %s", port);
+  logger.debug("BIND_ADDRESS: %s", bindAddress);
   logger.debug("FRACTAL_SERVER_URL: %s", fractalServerUrl);
   logger.debug("BASE_PATH: %s", basePath);
   logger.debug("VIZARR_STATIC_FILES_PATH: %s", vizarrStaticFilesPath);
@@ -67,6 +70,7 @@ function loadConfig(): Config {
 
   return {
     port,
+    bindAddress,
     fractalServerUrl,
     basePath,
     vizarrStaticFilesPath,
