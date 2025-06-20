@@ -2,6 +2,7 @@ Note: Numbers like (#123) point to closed Pull Requests on the fractal-vizarr-vi
 
 # Unreleased
 
+* Separated fractal-data from vizarr, renamed repository to `fractal-data` (\#64);
 * Added `BIND_ADDRESS` environment variable, defaulting to `0.0.0.0` for IPv4 binding (\#64);
 
 # 0.3.2

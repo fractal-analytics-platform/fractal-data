@@ -20,7 +20,7 @@ app.use((req, _, next) => {
 const authorizer = getAuthorizer();
 
 // Endpoint serving zarr files
-app.use(`${config.basePath}data`, async function (req, res) {
+app.use(`${config.basePath}files`, async function (req, res) {
   await serveZarrData(authorizer, req, res);
 });
 
@@ -29,13 +29,10 @@ app.use(`${config.basePath}alive`, async function (req, res) {
   await aliveEndpoint(req, res);
 });
 
-// Serving Vizarr static files
-app.use(`${config.basePath}`, express.static(config.vizarrStaticFilesPath));
-
 // Start server
 const server = app.listen(config.port, config.bindAddress, () => {
   logger.info(
-    "fractal-vizarr-viewer is listening at http://localhost:%d%s",
+    "fractal-data is listening at http://localhost:%d%s",
     config.port,
     config.basePath
   );

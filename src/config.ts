@@ -26,7 +26,6 @@ function loadConfig(): Config {
   const port = process.env.PORT ? parseInt(process.env.PORT) : 3000;
   const bindAddress = process.env.BIND_ADDRESS || "0.0.0.0";
   const fractalServerUrl = getRequiredEnv("FRACTAL_SERVER_URL");
-  const vizarrStaticFilesPath = getRequiredEnv("VIZARR_STATIC_FILES_PATH");
 
   const validAuthorizationSchemes = [
     "fractal-server",
@@ -55,7 +54,7 @@ function loadConfig(): Config {
     ? parseInt(process.env.CACHE_EXPIRATION_TIME)
     : 60;
 
-  let basePath = process.env.BASE_PATH || "/vizarr";
+  let basePath = process.env.BASE_PATH || "/data";
   if (!basePath.endsWith("/")) {
     basePath += "/";
   }
@@ -64,7 +63,6 @@ function loadConfig(): Config {
   logger.debug("BIND_ADDRESS: %s", bindAddress);
   logger.debug("FRACTAL_SERVER_URL: %s", fractalServerUrl);
   logger.debug("BASE_PATH: %s", basePath);
-  logger.debug("VIZARR_STATIC_FILES_PATH: %s", vizarrStaticFilesPath);
   logger.debug("AUTHORIZATION_SCHEME: %s", authorizationScheme);
   logger.debug("CACHE_EXPIRATION_TIME: %d", cacheExpirationTime);
 
@@ -73,7 +71,6 @@ function loadConfig(): Config {
     bindAddress,
     fractalServerUrl,
     basePath,
-    vizarrStaticFilesPath,
     authorizationScheme: authorizationScheme as AuthorizationScheme,
     cacheExpirationTime,
     testingUsername,

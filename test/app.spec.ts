@@ -17,8 +17,8 @@ vi.mock("../src/config.js", () => {
 import { serveZarrData } from "../src/data";
 import { Authorizer } from "../src/authorizer";
 
-describe("Serving vizarr data", () => {
-  const tmpDir = path.join(os.tmpdir(), "fractal-vizarr-app-test");
+describe("Serving data", () => {
+  const tmpDir = path.join(os.tmpdir(), "fractal-data-app-test");
 
   beforeAll(() => {
     // Create test files
