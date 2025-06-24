@@ -5,7 +5,7 @@ import { vi } from "vitest";
 export function mockConfig(config: Partial<Config>) {
   const getConfig = () =>
     ({
-      basePath: "/vizarr/",
+      basePath: "/data",
       fractalServerUrl: "http://localhost:8000",
       ...config,
     } as Config);
