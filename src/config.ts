@@ -59,12 +59,18 @@ function loadConfig(): Config {
     basePath += "/";
   }
 
+  const vizarrStaticFilesPath = process.env.VIZARR_STATIC_FILES_PATH;
+
   logger.debug("PORT: %s", port);
   logger.debug("BIND_ADDRESS: %s", bindAddress);
   logger.debug("FRACTAL_SERVER_URL: %s", fractalServerUrl);
   logger.debug("BASE_PATH: %s", basePath);
   logger.debug("AUTHORIZATION_SCHEME: %s", authorizationScheme);
   logger.debug("CACHE_EXPIRATION_TIME: %d", cacheExpirationTime);
+
+  if (vizarrStaticFilesPath) {
+    logger.debug("VIZARR_STATIC_FILES_PATH: %s", vizarrStaticFilesPath);
+  }
 
   return {
     port,
@@ -75,6 +81,7 @@ function loadConfig(): Config {
     cacheExpirationTime,
     testingUsername,
     testingPassword,
+    vizarrStaticFilesPath,
   };
 }
 

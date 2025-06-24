@@ -4,6 +4,7 @@ Note: Numbers like (#123) point to closed Pull Requests on the fractal-vizarr-vi
 
 * Separated fractal-data from vizarr, renamed repository to `fractal-data` (\#64);
 * Added `BIND_ADDRESS` environment variable, defaulting to `0.0.0.0` for IPv4 binding (\#64);
+* Made `VIZARR_STATIC_FILES_PATH` environment variable optional (\#66);
 
 # 0.3.2
 
