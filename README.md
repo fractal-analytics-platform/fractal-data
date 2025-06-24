@@ -4,10 +4,11 @@ Prototype to explore serving/viewing zarr data.
 
 This repository contains a simple server application made using [Express](https://expressjs.com/).
 
-The application has 2 endpoints:
+The application has 3 endpoints:
 
 - the endpoint `/files/{path-to-zarr}`, that serves the content of Zarr files checking user authorization.
 - the endpoint `/alive`, that returns the status of the service.
+- the optional endpoint `/vizarr`, that serves vizarr static files when the `VIZARR_STATIC_FILES_PATH` environment variable is set.
 
 > To run fractal-data you need to have an active instance of `fractal-server` and an active instance of `fractal-web`. You need to log-in to `fractal-web` from the browser using a user that has been authorized to see the vizarr files. Details about authorization are explained in the next section.
 
@@ -72,6 +73,7 @@ To start the application installed in this way see the section [Run fractal-data
 - `PORT`: the port where fractal-data app is served;
 - `BIND_ADDRESS`: specifies the IP address for the server to bind to; use `0.0.0.0` (IPv4) or `::` (IPv6) to listen on all interfaces, `127.0.0.1` (IPv4) or `::1` (IPv6) for localhost only; the default value is `0.0.0.0`;
 - `FRACTAL_SERVER_URL`: the base URL of fractal-server;
+- `VIZARR_STATIC_FILES_PATH`: path to the files generated running `npm run build` in Vizarr source folder; this variable is optional and, if present, it will be used to serve Vizarr static files from the `/vizarr` endpoint;
 - `BASE_PATH`: base path of fractal-data application;
 - `AUTHORIZATION_SCHEME`: defines how the service verifies user authorization. The following options are available:
   - `fractal-server`: the paths that can be accessed by each user are retrieved calling fractal-server API.
@@ -205,7 +207,7 @@ The output is located in the `dist` folder.
 
 ### Run fractal-data
 
-Then go back to fractal-data folder and run `npm run start` to start the project. The server will start on port 3000.
+Then go back to fractal-data folder and run `npm run start` to start the project. The server will start on port 3000. Remember to set the `VIZARR_STATIC_FILES_PATH`, to serve Vizarr static files from the `/vizarr` endpoint. Vizarr static files need to be served from the same port and domain of the fractal-data service, otherwise you will encounter CORS issues.
 
 ### Alive endpoint
 

@@ -29,6 +29,14 @@ app.use(`${config.basePath}alive`, async function (req, res) {
   await aliveEndpoint(req, res);
 });
 
+// Serving Vizarr static files
+if (config.vizarrStaticFilesPath) {
+  app.use(
+    `${config.basePath}vizarr`,
+    express.static(config.vizarrStaticFilesPath)
+  );
+}
+
 // Start server
 const server = app.listen(config.port, config.bindAddress, () => {
   logger.info(

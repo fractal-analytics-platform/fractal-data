@@ -12,6 +12,7 @@ export type Config = {
   cacheExpirationTime: number;
   testingUsername: string | null;
   testingPassword: string | null;
+  vizarrStaticFilesPath: string | undefined;
 };
 
 export type User = {
