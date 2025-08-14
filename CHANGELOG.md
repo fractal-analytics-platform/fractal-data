@@ -1,5 +1,9 @@
 Note: Numbers like (#123) point to closed Pull Requests on the fractal-vizarr-viewer repository.
 
+# Unreleased
+
+* Added workaround to fix labels bug in most recent Chrome versions (\#68);
+
 # 0.4.0
 
 * Separated fractal-data from vizarr, renamed repository to `fractal-data` (\#64);
