@@ -24,12 +24,12 @@ jobs:
           cache: npm
 
       - name: Clone vizarr
-        run: git clone https://github.com/hms-dbmi/vizarr.git
+        run: git clone https://github.com/fractal-analytics-platform/vizarr.git
 
       - name: Checkout vizarr commit
         run: |
           cd vizarr
-          git checkout eb2b77fed92a08c78c5770144bc7ccf19e9c7658
+          git checkout a04555b6557a42f4ee627850bad4e6b3fe8c8fe1
 
       - name: Install dependencies
         run: |
