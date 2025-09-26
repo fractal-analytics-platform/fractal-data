@@ -1,6 +1,6 @@
 {
   "name": "fractal-data",
-  "version": "0.4.1-a1",
+  "version": "0.4.1-a2",
   "description": "",
   "main": "dist/app.js",
   "scripts": {
