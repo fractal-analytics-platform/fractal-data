@@ -2,7 +2,9 @@ Note: Numbers like (#123) point to closed Pull Requests on the fractal-vizarr-vi
 
 # Unreleased
 
-* Used BioNGFF Viewer instead of Vizarr (\#69).
+* Used BioNGFF Viewer instead of Vizarr (\#69):
+    * Renamed `VIZARR_STATIC_FILES_PATH` to `VIEWER_STATIC_FILES_PATH`;
+    * Renamed `/vizarr` to `/viewer`;
 * Added workaround to fix labels bug in most recent Chrome versions (\#68);
 
 # 0.4.0
