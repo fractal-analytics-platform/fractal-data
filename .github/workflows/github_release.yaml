@@ -51,6 +51,47 @@ jobs:
         with:
           files: biongff-viewer/fractal-viewer-${{ github.ref_name }}.tar.gz
 
+  build-vizarr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Clone vizarr
+        run: git clone https://github.com/fractal-analytics-platform/vizarr.git
+
+      - name: Checkout vizarr commit
+        run: |
+          cd vizarr
+          git checkout a70efd2f2861ed7e20d6485525806799a6d9f619
+
+      - name: Install dependencies
+        run: |
+          cd vizarr
+          npx -y pnpm install
+
+      - name: Generate build artifacts
+        run: |
+          cd vizarr
+          npx pnpm run build
+
+      - name: Generate the package
+        run: |
+          cd vizarr
+          tar -czpf fractal-vizarr-${{ github.ref_name }}.tar.gz dist LICENSE
+
+      - name: Release
+        uses: softprops/action-gh-release@v2.2.1
+        with:
+          files: vizarr/fractal-vizarr-${{ github.ref_name }}.tar.gz
+
   build-server:
     runs-on: ubuntu-latest
 
