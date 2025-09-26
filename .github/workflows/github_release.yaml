@@ -40,7 +40,7 @@ jobs:
           npx pnpm install
           npx pnpm --filter viewer run build
           npx pnpm --filter anndata-zarr run build
-          npx pnpm --filter app run build --base /data/viewer
+          npx pnpm --filter app run build --base './'
 
       - name: Generate the package
         run: |
