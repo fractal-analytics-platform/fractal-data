@@ -5,10 +5,6 @@ WORKDIR /
 RUN git clone https://github.com/BioNGFF/biongff-viewer.git
 WORKDIR /biongff-viewer
 
-# modifying .gitmodules to use our vizarr fork
-RUN sed -i 's|hms-dbmi|fractal-analytics-platform|g' .gitmodules
-RUN printf "\tbranch = workaround-labels-bug\n" >> .gitmodules
-
 RUN git submodule init
 RUN git submodule update
 

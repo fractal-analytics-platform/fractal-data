@@ -29,8 +29,6 @@ jobs:
       - name: Init git submodules
         run: |
           cd biongff-viewer
-          sed -i 's|hms-dbmi|fractal-analytics-platform|g' .gitmodules
-          printf "\tbranch = workaround-labels-bug\n" >> .gitmodules
           git submodule init
           git submodule update
 

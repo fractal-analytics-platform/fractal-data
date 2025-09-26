@@ -191,17 +191,11 @@ Copy the file `.env.example` to `.env` and customize values for the environment 
 
 ### BioNGFF Viewer setup
 
-BioNGFF Viewer depends on Vizarr and we are using a custom fork of Vizarr, to fix some issues. The .gitmodules file of the BioNGFF Viewer needs to be changed to reference our Vizarr fork.
-
 > Note: for simplicity, we assume that `fractal-data` and `biongff-viewer` are subfolders of the same folder:
 
 ```bash
 git clone https://github.com/BioNGFF/biongff-viewer.git
 cd biongff-viewer
-
-# modifying .gitmodules to use our vizarr fork
-sed -i 's|hms-dbmi|fractal-analytics-platform|g' .gitmodules
-printf "\tbranch = workaround-labels-bug\n" >> .gitmodules
 
 git submodule init
 git submodule update
@@ -209,7 +203,7 @@ git submodule update
 npx pnpm install
 npx pnpm --filter viewer run build
 npx pnpm --filter anndata-zarr run build
-npx pnpm --filter app run build --base /data/viewer
+npx pnpm --filter app run build --base './'
 ```
 
 The output is located in the `sites/app/dist` folder.
