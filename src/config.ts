@@ -59,7 +59,7 @@ function loadConfig(): Config {
     basePath += "/";
   }
 
-  const vizarrStaticFilesPath = process.env.VIZARR_STATIC_FILES_PATH;
+  const viewerStaticFilesPath = process.env.VIEWER_STATIC_FILES_PATH;
 
   logger.debug("PORT: %s", port);
   logger.debug("BIND_ADDRESS: %s", bindAddress);
@@ -68,8 +68,8 @@ function loadConfig(): Config {
   logger.debug("AUTHORIZATION_SCHEME: %s", authorizationScheme);
   logger.debug("CACHE_EXPIRATION_TIME: %d", cacheExpirationTime);
 
-  if (vizarrStaticFilesPath) {
-    logger.debug("VIZARR_STATIC_FILES_PATH: %s", vizarrStaticFilesPath);
+  if (viewerStaticFilesPath) {
+    logger.debug("VIEWER_STATIC_FILES_PATH: %s", viewerStaticFilesPath);
   }
 
   return {
@@ -81,7 +81,7 @@ function loadConfig(): Config {
     cacheExpirationTime,
     testingUsername,
     testingPassword,
-    vizarrStaticFilesPath,
+    viewerStaticFilesPath,
   };
 }
 

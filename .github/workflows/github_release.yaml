@@ -10,7 +10,7 @@ on:
       - 'v[0-9]+.[0-9]+.[0-9]+rc[0-9]+'
 
 jobs:
-  build-vizarr:
+  build-viewer:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,33 +23,35 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: Clone vizarr
-        run: git clone https://github.com/fractal-analytics-platform/vizarr.git
+      - name: Clone BioNGFF Viewer
+        run: git clone https://github.com/BioNGFF/biongff-viewer.git
 
-      - name: Checkout vizarr commit
+      - name: Init git submodules
         run: |
-          cd vizarr
-          git checkout a04555b6557a42f4ee627850bad4e6b3fe8c8fe1
-
-      - name: Install dependencies
-        run: |
-          cd vizarr
-          npx -y pnpm install
+          cd biongff-viewer
+          sed -i 's|hms-dbmi|fractal-analytics-platform|g' .gitmodules
+          printf "\tbranch = workaround-labels-bug\n" >> .gitmodules
+          git submodule init
+          git submodule update
 
       - name: Generate build artifacts
         run: |
-          cd vizarr
-          npx pnpm run build
+          cd biongff-viewer
+          npx pnpm install
+          npx pnpm --filter viewer run build
+          npx pnpm --filter anndata-zarr run build
+          npx pnpm --filter app run build --base /data/viewer
 
       - name: Generate the package
         run: |
-          cd vizarr
-          tar -czpf fractal-vizarr-${{ github.ref_name }}.tar.gz dist LICENSE
+          cd biongff-viewer
+          mv sites/app/dist .
+          tar -czpf fractal-viewer-${{ github.ref_name }}.tar.gz dist LICENSE
 
       - name: Release
         uses: softprops/action-gh-release@v2.2.1
         with:
-          files: vizarr/fractal-vizarr-${{ github.ref_name }}.tar.gz
+          files: biongff-viewer/fractal-viewer-${{ github.ref_name }}.tar.gz
 
   build-server:
     runs-on: ubuntu-latest

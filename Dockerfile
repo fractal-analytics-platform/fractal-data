@@ -2,12 +2,20 @@ FROM node:20
 
 WORKDIR /
 
-RUN git clone https://github.com/hms-dbmi/vizarr.git
-WORKDIR /vizarr
+RUN git clone https://github.com/BioNGFF/biongff-viewer.git
+WORKDIR /biongff-viewer
 
-RUN git checkout eb2b77fed92a08c78c5770144bc7ccf19e9c7658
+# modifying .gitmodules to use our vizarr fork
+RUN sed -i 's|hms-dbmi|fractal-analytics-platform|g' .gitmodules
+RUN printf "\tbranch = workaround-labels-bug\n" >> .gitmodules
+
+RUN git submodule init
+RUN git submodule update
+
 RUN npx -y pnpm install
-RUN npx pnpm run build
+RUN npx pnpm --filter viewer run build
+RUN npx pnpm --filter anndata-zarr run build
+RUN npx pnpm --filter app run build --base /data/viewer
 
 RUN mkdir /fractal-data
 
@@ -20,6 +28,6 @@ ADD tsconfig.json .
 RUN npm install
 RUN npm run build
 
-ENV VIZARR_STATIC_FILES_PATH=/vizarr/dist
+ENV VIEWER_STATIC_FILES_PATH=/biongff-viewer/sites/app/dist
 
 CMD ["node", "/fractal-data/dist/app.js"]

@@ -29,11 +29,11 @@ app.use(`${config.basePath}alive`, async function (req, res) {
   await aliveEndpoint(req, res);
 });
 
-// Serving Vizarr static files
-if (config.vizarrStaticFilesPath) {
+// Serving viewer static files
+if (config.viewerStaticFilesPath) {
   app.use(
-    `${config.basePath}vizarr`,
-    express.static(config.vizarrStaticFilesPath)
+    `${config.basePath}viewer`,
+    express.static(config.viewerStaticFilesPath)
   );
 }
 
