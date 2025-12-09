@@ -3,6 +3,7 @@ Note: Numbers like (#123) point to closed Pull Requests on the fractal-vizarr-vi
 # Unreleased
 
 * Added workaround to fix labels bug in most recent Chrome versions (\#68);
+* Update `User` type (\#74);
 
 # 0.4.0
 
