@@ -18,13 +18,11 @@ export async function serveZarrData(
     const validUser = await authorizer.isUserValid(req);
     if (!validUser) {
       logger.info("Unauthorized request: %s", req.path.normalize());
-      addBasicAuthChallengeIfNeeded(res);
       return res.status(401).send("Unauthorized").end();
     }
     const authorized = await authorizer.isUserAuthorized(completePath, req);
     if (!authorized) {
       logger.info("Forbidden request: %s", req.path.normalize());
-      addBasicAuthChallengeIfNeeded(res);
       return res.status(403).send("Forbidden").end();
     }
     if (!fs.existsSync(completePath)) {
@@ -44,8 +42,3 @@ export async function serveZarrData(
   }
 }
 
-function addBasicAuthChallengeIfNeeded(res: Response) {
-  if (config.authorizationScheme === "testing-basic-auth") {
-    res.set("WWW-Authenticate", 'Basic realm="Testing credentials"');
-  }
-}

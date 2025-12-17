@@ -77,8 +77,6 @@ To start the application installed in this way see the section [Run fractal-data
 - `BASE_PATH`: base path of fractal-data application;
 - `AUTHORIZATION_SCHEME`: defines how the service verifies user authorization. The following options are available:
   - `fractal-server`: the paths that can be accessed by each user are retrieved calling fractal-server API.
-  - `testing-basic-auth`: enables Basic Authentication for testing purposes. The credentials are specified through two additional environment variables: `TESTING_USERNAME` and `TESTING_PASSWORD`. This option should not be used in production environments.
-  - `none`: no authorization checks are performed, allowing access to all users, including anonymous ones. This option is useful for demonstrations and testing but should not be used in production environments.
 - `CACHE_EXPIRATION_TIME`: cookie cache TTL in seconds; when user info is retrieved from a cookie calling the current user endpoint on fractal-server the information is cached for the specified amount of seconds, to reduce the number of calls to fractal-server;
 - `LOG_LEVEL_CONSOLE`: the log level of logs that will be written to the console; the default value is `info`;
 - `LOG_FILE`: the path of the file where logs will be written; by default is unset and no file will be created;
