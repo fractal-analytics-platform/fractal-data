@@ -24,16 +24,6 @@ export function getAuthorizer() {
   switch (config.authorizationScheme) {
     case "fractal-server":
       return new FractalServerAuthorizer();
-    case "none":
-      logger.warn(
-        'Authorization scheme is set to "none": everybody will be able to access the file. Do not use in production!'
-      );
-      return new NoneAuthorizer();
-    case "testing-basic-auth":
-      logger.warn(
-        'Authorization scheme is set to "testing-basic-auth". Do not use in production!'
-      );
-      return new TestingBasicAuthAuthorizer();
     default:
       logger.error(
         "Unsupported authorization scheme %s",
@@ -53,16 +43,6 @@ export interface Authorizer {
    * Returns true if the user is authorized to read the file path passed as first argument, false otherwise.
    */
   isUserAuthorized(completePath: string, req: Request): Promise<boolean>;
-}
-
-export class NoneAuthorizer implements Authorizer {
-  async isUserValid(): Promise<boolean> {
-    return true;
-  }
-
-  async isUserAuthorized(): Promise<boolean> {
-    return true;
-  }
 }
 
 export class FractalServerAuthorizer implements Authorizer {
@@ -123,26 +103,5 @@ export class FractalServerAuthorizer implements Authorizer {
     } finally {
       loadingViewerPaths = loadingViewerPaths.filter((c) => c !== token);
     }
-  }
-}
-
-export class TestingBasicAuthAuthorizer implements Authorizer {
-  async isUserValid(req: Request): Promise<boolean> {
-    const authHeader = req.get("Authorization");
-    return !!authHeader;
-  }
-
-  async isUserAuthorized(_: string, req: Request): Promise<boolean> {
-    const authHeader = req.get("Authorization")!;
-    const [scheme, credentials] = authHeader.split(" ");
-    if (scheme !== "Basic" || !credentials) {
-      return false;
-    }
-    const [username, password] = Buffer.from(credentials, "base64")
-      .toString()
-      .split(":");
-    return (
-      username === config.testingUsername && password === config.testingPassword
-    );
   }
 }

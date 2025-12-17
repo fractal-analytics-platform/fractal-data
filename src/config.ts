@@ -29,8 +29,6 @@ function loadConfig(): Config {
 
   const validAuthorizationSchemes = [
     "fractal-server",
-    "testing-basic-auth",
-    "none",
   ];
   const authorizationScheme = getRequiredEnv("AUTHORIZATION_SCHEME");
   if (!validAuthorizationSchemes.includes(authorizationScheme)) {
@@ -44,11 +42,7 @@ function loadConfig(): Config {
 
   let testingUsername: string | null = null;
   let testingPassword: string | null = null;
-  if (authorizationScheme === "testing-basic-auth") {
-    testingUsername = getRequiredEnv("TESTING_USERNAME");
-    testingPassword = getRequiredEnv("TESTING_PASSWORD");
-  }
-
+  
   // Cookie cache TTL in seconds
   const cacheExpirationTime = process.env.CACHE_EXPIRATION_TIME
     ? parseInt(process.env.CACHE_EXPIRATION_TIME)
