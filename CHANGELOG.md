@@ -1,6 +1,6 @@
 Note: Numbers like (#123) point to closed Pull Requests on the fractal-vizarr-viewer repository.
 
-# Unreleased
+# 0.4.2
 
 * Added workaround to fix labels bug in most recent Chrome versions (\#68);
 * Update `User` type (\#74);
