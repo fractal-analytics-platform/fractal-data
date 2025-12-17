@@ -4,6 +4,7 @@ Note: Numbers like (#123) point to closed Pull Requests on the fractal-vizarr-vi
 
 * Update `User` type (\#74);
 * Drop `TestingBasicAuthAuthorizer` and `NoneAuthorizer` (\#75);
+* Supported range requests (\#78);
 
 # 0.4.2
 
