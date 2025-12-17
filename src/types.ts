@@ -13,10 +13,5 @@ export type Config = {
 };
 
 export type User = {
-  id: number;
   email: string;
-  is_active: boolean;
-  is_superuser: boolean;
-  is_verified: boolean;
-  username: string | null;
 };
