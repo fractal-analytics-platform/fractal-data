@@ -1,11 +1,10 @@
 import * as fs from "fs";
+import * as fsp from "fs/promises";
 import type { Request, Response } from "express";
 import { getValidPath } from "./path.js";
-import { getConfig } from "./config.js";
 import { getLogger } from "./logger.js";
 import { Authorizer } from "./authorizer.js";
 
-const config = getConfig();
 const logger = getLogger();
 
 export async function serveZarrData(
@@ -34,11 +33,28 @@ export async function serveZarrData(
       return res.status(400).send("Is directory").end();
     }
     logger.trace("Path to load: %s", completePath);
-    const stream = fs.createReadStream(completePath);
+
+    const stats = await fsp.stat(completePath);
+
+    const ranges = req.range(stats.size);
+
+    let options = {};
+    if (ranges && Array.isArray(ranges) && ranges.length === 1) {
+      const [range] = ranges;
+      const { start, end } = range;
+      logger.trace("Requested byte range [%d, %d]", start, end);
+      options = { start, end };
+      res.setHeader("Content-Length", end - start + 1);
+      res.setHeader("Content-Range", `bytes ${start}-${end}/${stats.size}`);
+      res.status(206);
+    } else {
+      res.setHeader("Content-Length", stats.size);
+    }
+
+    const stream = fs.createReadStream(completePath, options);
     stream.pipe(res);
   } catch (err) {
     logger.error("Error reading file", err);
     return res.status(500).send("Internal Server Error").end();
   }
 }
-

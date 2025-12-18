@@ -3,6 +3,7 @@ import {
   getMockedResponse,
   mockConfig,
   getAnonymousMockedRequest,
+  getMockedRequestWithRange,
 } from "./mock";
 import fs from "fs";
 import os from "os";
@@ -22,7 +23,9 @@ describe("Serving data", () => {
 
   beforeAll(() => {
     // Create test files
-    fs.mkdirSync(path.join(tmpDir, "directory"), { recursive: true });
+    const dir = path.join(tmpDir, "directory");
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, "foo"), "012345");
   });
 
   afterAll(() => {
@@ -67,6 +70,32 @@ describe("Serving data", () => {
     const authorizer = mockAuthorizer(true, true);
     await serveZarrData(authorizer, request, response);
     expect(response.status).toHaveBeenCalledWith(400);
+  });
+
+  it("Read file request", async () => {
+    const request = getAnonymousMockedRequest(`${tmpDir}/directory/foo`);
+    const response = getMockedResponse();
+    const authorizer = mockAuthorizer(true, true);
+    await serveZarrData(authorizer, request, response);
+    await vi.waitUntil(() => response.body === "012345");
+    expect(response.setHeader).toHaveBeenCalledWith("Content-Length", 6);
+  });
+
+  it("Range request", async () => {
+    const request = getMockedRequestWithRange(`${tmpDir}/directory/foo`, {
+      start: 1,
+      end: 3,
+    });
+    const response = getMockedResponse();
+    const authorizer = mockAuthorizer(true, true);
+    await serveZarrData(authorizer, request, response);
+    expect(response.status).toHaveBeenCalledWith(206);
+    expect(response.setHeader).toHaveBeenCalledWith(
+      "Content-Range",
+      "bytes 1-3/6"
+    );
+    expect(response.setHeader).toHaveBeenCalledWith("Content-Length", 3);
+    await vi.waitUntil(() => response.body === "123");
   });
 });
 
