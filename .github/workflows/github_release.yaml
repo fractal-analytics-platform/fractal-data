@@ -23,6 +23,9 @@ jobs:
           node-version: 20
           cache: npm
 
+      - name: Install pnpm
+        run: npm install -g pnpm@9
+
       - name: Clone vizarr
         run: git clone https://github.com/BioNGFF/vizarr
 
@@ -34,12 +37,12 @@ jobs:
       - name: Install dependencies
         run: |
           cd vizarr
-          npx -y pnpm install
+          pnpm install
 
       - name: Generate build artifacts
         run: |
           cd vizarr
-          npx pnpm run build
+          pnpm run build
 
       - name: Generate the package
         run: |
