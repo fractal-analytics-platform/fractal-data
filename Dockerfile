@@ -2,10 +2,10 @@ FROM node:20
 
 WORKDIR /
 
-RUN git clone https://github.com/hms-dbmi/vizarr.git
+RUN git clone https://github.com/BioNGFF/vizarr
 WORKDIR /vizarr
 
-RUN git checkout eb2b77fed92a08c78c5770144bc7ccf19e9c7658
+RUN git checkout 88b6f8128799cd946e93d46278d31a58e392bd62
 RUN npx -y pnpm install
 RUN npx pnpm run build
 
