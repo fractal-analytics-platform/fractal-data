@@ -87,6 +87,6 @@ jobs:
         run: tar -C package -czf node-${{ matrix.node-version }}-fractal-data-${{ github.ref_name }}.tar.gz dist package.json node_modules LICENSE
 
       - name: Release
-        uses: softprops/action-gh-release@v2.2.1
+        uses: softprops/action-gh-release@v2
         with:
           files: node-${{ matrix.node-version }}-fractal-data-${{ github.ref_name }}.tar.gz
