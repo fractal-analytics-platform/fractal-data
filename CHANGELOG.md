@@ -1,5 +1,9 @@
 Note: Numbers like (#123) point to closed Pull Requests on the fractal-vizarr-viewer repository.
 
+# Unreleased
+
+* Used BioNGFF/vizarr instead of fractal-analytics-platform/vizarr (\#81);
+
 # 0.4.3
 
 * Update `User` type (\#74);
