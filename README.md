@@ -194,9 +194,9 @@ In order to display a proper error message related to the missing authorization 
 > Note: for simplicity, we assume that `fractal-data` and `vizarr` are subfolders of the same folder:
 
 ```bash
-git clone https://github.com/hms-dbmi/vizarr.git
+git clone https://github.com/fractal-analytics-platform/vizarr.git
 cd vizarr
-git checkout eb2b77fed92a08c78c5770144bc7ccf19e9c7658
+git checkout origin/workaround-labels-bug
 npx pnpm install
 npx pnpm run build
 ```
