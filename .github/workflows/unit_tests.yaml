@@ -27,7 +27,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm install
+        run: npm run install:aws
 
       - name: Build the application
         run: npm run build
