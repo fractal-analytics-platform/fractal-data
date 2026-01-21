@@ -2,7 +2,12 @@ import * as path from 'path';
 import type { Request } from 'express';
 
 export function getValidPath(req: Request): string {
-  return decodeURIComponent(req.path).normalize();
+  let decodedPath: string = decodeURIComponent(req.path).normalize();
+  // path are sent with a leading slash, remove it for s3 paths
+  if (decodedPath.startsWith("/s3://")) {
+    decodedPath = decodedPath.slice(1);
+  }
+  return decodedPath;
 }
 
 /**

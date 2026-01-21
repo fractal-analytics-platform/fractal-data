@@ -14,4 +14,10 @@ describe("Path utilities", () => {
     const path = getValidPath(request);
     expect(path).toEqual("/path/to/bar#baz");
   });
+  it("valid path with S3", async () => {
+    const request = getAnonymousMockedRequest("/s3://bucket/key");
+    const path = getValidPath(request);
+    expect(path).toEqual("s3://bucket/key");
+  });
+
 });

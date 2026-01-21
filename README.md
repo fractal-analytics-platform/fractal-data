@@ -183,6 +183,8 @@ Get and install the `fractal-data` application:
 git clone https://github.com/fractal-analytics-platform/fractal-data.git
 cd fractal-data
 npm install
+# If your data is stored on S3, install also the AWS dependencies
+npm run install:aws
 ```
 
 Copy the file `.env.example` to `.env` and customize values for the environment variables.
