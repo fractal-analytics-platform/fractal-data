@@ -6,7 +6,6 @@ import { getValidPath } from "./path.js";
 import { getLogger } from "./logger.js";
 import { Authorizer } from "./authorizer.js";
 import { S3 } from '@aws-sdk/client-s3';
-import { get } from "http";
 const s3 = new S3();
 
 const logger = getLogger();

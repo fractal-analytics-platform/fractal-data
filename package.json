@@ -8,7 +8,7 @@
     "build": "tsc",
     "start": "tsc && node dist/app.js",
     "test": "vitest",
-    "install:aws": "npm install --save-optional @aws-sdk/client-s3@3.654.0 aws-sdk@2.1693.0"
+    "install:aws": "npm install --save-optional @aws-sdk/client-s3@3.972.0"
   },
   "type": "module",
   "keywords": [],
@@ -30,9 +30,6 @@
   },
   "peerDependenciesMeta": {
     "@aws-sdk/client-s3": {
-      "optional": true
-    },
-    "aws-sdk": {
       "optional": true
     }
   },
