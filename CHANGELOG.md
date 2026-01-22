@@ -1,5 +1,10 @@
 Note: Numbers like (#123) point to closed Pull Requests on the fractal-vizarr-viewer repository.
 
+# 0.4.4 (unreleased)
+
+* Drop support for node v18 (\#85).
+* Add support for node v24 (\#85).
+
 # 0.4.3
 
 * Update `User` type (\#74);
