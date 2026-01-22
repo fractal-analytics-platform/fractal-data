@@ -17,7 +17,7 @@ ADD src src
 ADD package* .
 ADD tsconfig.json .
 
-RUN npm install
+RUN npm run install:aws
 RUN npm run build
 
 ENV VIZARR_STATIC_FILES_PATH=/vizarr/dist
