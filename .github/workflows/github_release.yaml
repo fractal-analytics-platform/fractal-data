@@ -23,23 +23,26 @@ jobs:
           node-version: 20
           cache: npm
 
+      - name: Install pnpm
+        run: npm install -g pnpm@9
+
       - name: Clone vizarr
-        run: git clone https://github.com/fractal-analytics-platform/vizarr.git
+        run: git clone https://github.com/BioNGFF/vizarr
 
       - name: Checkout vizarr commit
         run: |
           cd vizarr
-          git checkout a04555b6557a42f4ee627850bad4e6b3fe8c8fe1
+          git checkout 88b6f8128799cd946e93d46278d31a58e392bd62
 
       - name: Install dependencies
         run: |
           cd vizarr
-          npx -y pnpm install
+          pnpm install
 
       - name: Generate build artifacts
         run: |
           cd vizarr
-          npx pnpm run build
+          pnpm run build
 
       - name: Generate the package
         run: |
@@ -84,6 +87,6 @@ jobs:
         run: tar -C package -czf node-${{ matrix.node-version }}-fractal-data-${{ github.ref_name }}.tar.gz dist package.json node_modules LICENSE
 
       - name: Release
-        uses: softprops/action-gh-release@v2.2.1
+        uses: softprops/action-gh-release@v2
         with:
           files: node-${{ matrix.node-version }}-fractal-data-${{ github.ref_name }}.tar.gz

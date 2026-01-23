@@ -2,6 +2,7 @@ Note: Numbers like (#123) point to closed Pull Requests on the fractal-vizarr-vi
 
 # 0.4.4 (unreleased)
 
+* Used BioNGFF/vizarr instead of fractal-analytics-platform/vizarr (\#81);
 * Drop support for node v18 (\#85).
 * Add support for node v24 (\#85).
 

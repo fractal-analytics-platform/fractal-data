@@ -40,6 +40,8 @@ If we need to serve these services on different domains a different authenticati
 
 ## Install fractal-data from release packages
 
+> This is the suggested way to install fractal-data.
+
 The release packages include the Node.js server and the Vizarr static files. Starting from version 0.1.3, fractal-data releases provide tar.gz files containing built Vizarr static files and a package of built files for each supported node version.
 
 ### Install Vizarr static files
@@ -194,9 +196,9 @@ In order to display a proper error message related to the missing authorization 
 > Note: for simplicity, we assume that `fractal-data` and `vizarr` are subfolders of the same folder:
 
 ```bash
-git clone https://github.com/fractal-analytics-platform/vizarr.git
+git clone https://github.com/BioNGFF/vizarr
 cd vizarr
-git checkout origin/workaround-labels-bug
+git checkout 88b6f8128799cd946e93d46278d31a58e392bd62
 npx pnpm install
 npx pnpm run build
 ```
