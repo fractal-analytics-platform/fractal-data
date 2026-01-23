@@ -2,19 +2,19 @@ name: Unit tests
 
 on:
   push:
-    branches: ['main']
+    branches: ['main', 'ihb-develop']
   pull_request:
-    branches: ['main']
+    branches: ['main', 'ihb-develop']
 
 jobs:
   unit_tests:
     name: 'Node ${{ matrix.node-version }}'
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
 
     strategy:
       matrix:
-        node-version: ['18', '20']
+        node-version: ['20', '24']
 
     steps:
       - name: Check out repo
