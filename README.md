@@ -233,3 +233,11 @@ docker run --network host \
 ```
 
 For production replace the `--network host` option with a proper published port `-p 3000:3000` and set `FRACTAL_SERVER_URL` as an URL using a public domain.
+
+
+
+## Contributors and license
+
+The Fractal project is developed by the [BioVisionCenter](https://www.biovisioncenter.uzh.ch/en.html) at the University of Zurich, who contracts [eXact lab S.r.l](https://www.exact-lab.it/en/). for software engineering and development support.
+
+Unless otherwise specified, Fractal components are released under the BSD 3-Clause License, and copyright is with the BioVisionCenter at the University of Zurich.
