@@ -4,7 +4,12 @@ Note: Numbers like (#123) point to closed Pull Requests on the fractal-vizarr-vi
 
 * Added support for S3 paths (\#82);
 * Fixed handling of invalid range requests (\#82);
-* Dropped Node 18 support, now requiring Node 20 (\#82);
+
+# 0.5.0
+
+* Used BioNGFF/vizarr instead of fractal-analytics-platform/vizarr (\#81);
+* Drop support for node v18 (\#85).
+* Add support for node v24 (\#85).
 
 # 0.4.3
 
