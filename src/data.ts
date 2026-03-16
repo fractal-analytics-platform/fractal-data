@@ -5,10 +5,37 @@ import type { Ranges, Result as RangeParserResult } from "range-parser";
 import { getValidPath } from "./path.js";
 import { getLogger } from "./logger.js";
 import { Authorizer } from "./authorizer.js";
-import { S3 } from '@aws-sdk/client-s3';
-const s3 = new S3();
 
 const logger = getLogger();
+
+
+let s3: any | null = null;
+let s3LoadAttempted = false;
+
+class S3UnavailableError extends Error {
+  constructor() {
+    super("S3 support is not installed");
+    this.name = "S3UnavailableError";
+  }
+}
+
+async function getS3Client(): Promise<any> {
+  if (s3LoadAttempted) {
+    if (!s3) throw new S3UnavailableError();
+    return s3;
+  }
+  s3LoadAttempted = true;
+
+  try {
+    const moduleName = "@aws-sdk/client-s3" as string;
+    const mod: any = await import(moduleName);
+    s3 = new mod.S3();
+    return s3;
+  } catch {
+    s3 = null;
+    throw new S3UnavailableError();
+  }
+}
 
 export async function serveZarrData(
   authorizer: Authorizer,
@@ -49,6 +76,16 @@ export async function serveZarrData(
       stream.pipe(res);
     }
     else {
+      let s3Client: any;
+      try {
+        s3Client = await getS3Client();
+      } catch (e) {
+        if (e instanceof S3UnavailableError) {
+          return res.status(501).send("Not Implemented - S3 support is not installed.").end();
+        }
+        throw e;
+      }
+
       // get bucket and key from URI
       let bucket: string = "";
       let key: string = "";
@@ -69,7 +106,7 @@ export async function serveZarrData(
 
       try {
 
-        const s3Response = await s3.getObject({
+        const s3Response = await s3Client.getObject({
           Bucket: bucket,
           Key: key
         });
@@ -78,7 +115,7 @@ export async function serveZarrData(
         let options = getRangeOptions(ranges, objectSize, res);
         // For range requests, fetch only the requested range from S3
         if (options && 'start' in options && 'end' in options) {
-          const rangeResponse = await s3.getObject({
+          const rangeResponse = await s3Client.getObject({
             Bucket: bucket,
             Key: key,
             Range: `bytes=${options.start}-${options.end}`
@@ -95,11 +132,22 @@ export async function serveZarrData(
           logger.info("S3 object not found: %s", completePath);
           return res.status(404).send("Not Found").end();
         }
-        throw s3Error;
+        if (s3Error.name === 'AccessDenied' || s3Error.$metadata?.httpStatusCode === 403) {
+          logger.info("Access denied to S3 object: %s", completePath);
+          return res.status(403).send("Forbidden").end();
+        }
+        if (s3Error.name === 'ExpiredToken') {
+          logger.info("Expired token for S3 access: %s", completePath);
+          return res.status(401).send("Unauthorized - Expired token").end();
+        }
+        else {
+          logger.info("Unexpected S3 error: %s", completePath);
+          return res.status(500).send(`Internal Server Error: ${s3Error.message}`).end();
+        }
       }
     }
-
-  } catch (err) {
+  }
+  catch (err) {
     logger.error("Error reading file", err);
     return res.status(500).send("Internal Server Error").end();
   }
