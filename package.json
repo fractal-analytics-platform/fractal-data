@@ -8,7 +8,7 @@
     "build": "tsc",
     "start": "tsc && node dist/app.js",
     "test": "vitest",
-    "install:aws": "npm install --save-optional @aws-sdk/client-s3@3.972.0"
+    "install:aws": "npm install --save-optional @aws-sdk/client-s3@3.972.0 && npm pkg set 'bundleDependencies[]'='@aws-sdk/client-s3'"
   },
   "type": "module",
   "keywords": [],
@@ -40,6 +40,10 @@
     "cache-manager",
     "dotenv",
     "express",
-    "log4js"
-  ]
+    "log4js",
+    "@aws-sdk/client-s3"
+  ],
+  "optionalDependencies": {
+    "@aws-sdk/client-s3": "^3.972.0"
+  }
 }
