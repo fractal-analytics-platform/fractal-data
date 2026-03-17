@@ -99,6 +99,9 @@ jobs:
         # any local cache directory that tooling may rely on.
         # This ensures the AWS variant is built from scratch, not layered
         # on top of the previous non-AWS build.
+        #
+        #  !!! WARNING!!! : do not run this command locally when testing
+        #  as it will delete untracked files/directories in the repository!
         run: git clean -fdx -e .cache/
 
       # Build the AWS variant
