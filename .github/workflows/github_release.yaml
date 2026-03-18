@@ -71,6 +71,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: npm
 
+      # Build the non-AWS variant first
       - name: Install dependencies
         run: npm install
 
@@ -86,7 +87,48 @@ jobs:
       - name: Repack the package removing parent folder
         run: tar -C package -czf node-${{ matrix.node-version }}-fractal-data-${{ github.ref_name }}.tar.gz dist package.json node_modules LICENSE
 
+      # Save first artifact before cleaning up
+      - name: Save non-AWS artifact
+        run: mv node-${{ matrix.node-version }}-fractal-data-${{ github.ref_name }}.tar.gz /tmp/
+
+      # Clean up
+      - name: Clean up for AWS variant
+        # git clean -fdx removes all untracked and ignored files/directories
+        # (node_modules, dist, package, *.tgz) to restore the working tree
+        # to a pristine post-checkout state. The -e .cache/ flag preserves
+        # any local cache directory that tooling may rely on.
+        # This ensures the AWS variant is built from scratch, not layered
+        # on top of the previous non-AWS build.
+        #
+        #  !!! WARNING!!! : do not run this command locally when testing
+        #  as it will delete untracked files/directories in the repository!
+        run: git clean -fdx -e .cache/
+
+      # Build the AWS variant
+      - name: Install dependencies with AWS SDK
+        run: npm run install:aws
+
+      - name: Rebuild
+        run: npm run build
+
+      - name: Add AWS SDK to bundleDependencies and repack
+        run: |
+          npm pkg set 'bundleDependencies[]'='@aws-sdk/client-s3'
+          npm pack
+
+      - name: Extract the AWS package
+        run: tar -xzf fractal-data-*.tgz
+
+      - name: Repack the package with AWS SDK
+        run: tar -C package -czf node-${{ matrix.node-version }}-fractal-data-with-aws-${{ github.ref_name }}.tar.gz dist package.json node_modules LICENSE
+
+      # Restore non-AWS artifact
+      - name: Restore non-AWS artifact
+        run: mv /tmp/node-${{ matrix.node-version }}-fractal-data-${{ github.ref_name }}.tar.gz .
+
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
-          files: node-${{ matrix.node-version }}-fractal-data-${{ github.ref_name }}.tar.gz
+          files: |
+            node-${{ matrix.node-version }}-fractal-data-${{ github.ref_name }}.tar.gz
+            node-${{ matrix.node-version }}-fractal-data-with-aws-${{ github.ref_name }}.tar.gz
