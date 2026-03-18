@@ -1,9 +1,9 @@
 Note: Numbers like (#123) point to closed Pull Requests on the fractal-vizarr-viewer repository.
 
-# Unreleased
+# 0.6.0
 
-* Added support for S3 paths (\#82);
-* Fixed handling of invalid range requests (\#82);
+* Added support for S3 paths (\#88);
+* Fixed handling of invalid range requests (\#88);
 
 # 0.5.0
 
