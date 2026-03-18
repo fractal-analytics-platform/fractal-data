@@ -1,5 +1,10 @@
 Note: Numbers like (#123) point to closed Pull Requests on the fractal-vizarr-viewer repository.
 
+# 0.6.0
+
+* Added support for S3 paths (\#88);
+* Fixed handling of invalid range requests (\#88);
+
 # 0.5.0
 
 * Used BioNGFF/vizarr instead of fractal-analytics-platform/vizarr (\#81);
