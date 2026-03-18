@@ -111,8 +111,10 @@ jobs:
       - name: Rebuild
         run: npm run build
 
-      - name: Repack with AWS SDK
-        run: npm pack
+      - name: Add AWS SDK to bundleDependencies and repack
+        run: |
+          npm pkg set 'bundleDependencies[]'='@aws-sdk/client-s3'
+          npm pack
 
       - name: Extract the AWS package
         run: tar -xzf fractal-data-*.tgz
