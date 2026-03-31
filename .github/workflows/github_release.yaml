@@ -120,10 +120,6 @@ jobs:
           GH_REF_NAME: ${{ github.ref_name }}
 
       - name: Release
-        run: gh release create
-        with:
-          files: |
-            "node-${{ matrix.node-version }}-fractal-data-${GH_REF_NAME}.tar.gz"
-            "node-${{ matrix.node-version }}-fractal-data-with-aws-${GH_REF_NAME}.tar.gz"
+        run: gh release create "${GH_REF_NAME}" "node-${{ matrix.node-version }}-fractal-data-${GH_REF_NAME}.tar.gz" "node-${{ matrix.node-version }}-fractal-data-with-aws-${GH_REF_NAME}.tar.gz"
         env:
           GH_REF_NAME: ${{ github.ref_name }}
