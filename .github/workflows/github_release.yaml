@@ -12,6 +12,8 @@ on:
 jobs:
   build-vizarr:
     runs-on: ubuntu-latest
+  permissions:
+    contents: write
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
@@ -43,14 +45,14 @@ jobs:
           GH_REF_NAME: ${{ github.ref_name }}
 
       - name: Release
-        run: gh release create
-        with:
-          files: "vizarr/fractal-vizarr-${GH_REF_NAME}.tar.gz"
+        run: gh release create "vizarr-${GH_REF_NAME}" "vizarr/fractal-vizarr-${GH_REF_NAME}.tar.gz"
         env:
           GH_REF_NAME: ${{ github.ref_name }}
 
   build-server:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     strategy:
       matrix:
