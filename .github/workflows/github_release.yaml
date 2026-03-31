@@ -138,11 +138,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    needs:
-      build-vizarr
-      build-server
+    needs: [build-vizarr, build-server]
     steps:
-    - run: gh release create "${GH_REF_NAME}" --draft
-      env:
-        GH_TOKEN: ${{ github.token }}
-        GH_REF_NAME: ${{ github.ref_name }}
+      - run: gh release create "${GH_REF_NAME}"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REF_NAME: ${{ github.ref_name }}
