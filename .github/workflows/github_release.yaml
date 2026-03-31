@@ -16,6 +16,9 @@ jobs:
     permissions:
       contents: write
     steps:
+    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      with:
+        persist-credentials: false
     - run: gh release create "${GH_REF_NAME}" --draft
       env:
         GH_TOKEN: ${{ github.token }}
@@ -140,6 +143,9 @@ jobs:
       contents: write
     needs: [build-vizarr, build-server]
     steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
       - run: gh release create "${GH_REF_NAME}"
         env:
           GH_TOKEN: ${{ github.token }}
