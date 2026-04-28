@@ -1,3 +1,4 @@
+import { readFileSync } from 'fs';
 import log4js, { Logger } from 'log4js';
 
 function getLayout(pattern: string) {
@@ -81,7 +82,17 @@ let logger: Logger | null = null;
 
 export function getLogger() {
   if (logger === null) {
-    logger = initLogger(process.env.LOG_LEVEL_CONSOLE, process.env.LOG_LEVEL_FILE, process.env.LOG_FILE);
+    const configPath = process.env.LOG_CONFIG_FILE;
+    if (configPath) {
+      log4js.configure(JSON.parse(readFileSync(configPath, 'utf-8')));
+      logger = log4js.getLogger();
+      logger.debug('LOG_CONFIG_FILE=%s', configPath);
+      process.on('unhandledRejection', (error) => {
+        log4js.getLogger().fatal('Unhandled rejection:', error);
+      });
+    } else {
+      logger = initLogger(process.env.LOG_LEVEL_CONSOLE, process.env.LOG_LEVEL_FILE, process.env.LOG_FILE);
+    }
   }
   return logger;
 }
