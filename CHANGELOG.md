@@ -2,7 +2,7 @@ Note: Numbers like (#123) point to closed Pull Requests on the fractal-vizarr-vi
 
 # Unreleased
 
-* Added support for custom log4js configuration file via `LOG_CONFIG_FILE` environment variable (\#88);
+* Added support for custom log4js configuration file via `LOG_CONFIG_FILE` environment variable (\#93);
 
 # 0.6.0
 
