@@ -10,86 +10,97 @@ on:
       - 'v[0-9]+.[0-9]+.[0-9]+rc[0-9]+'
 
 jobs:
+
+  create-release-draft:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      with:
+        persist-credentials: false
+    - run: gh release create "${GH_REF_NAME}" --draft --title "${GH_REF_NAME}"
+      env:
+        GH_TOKEN: ${{ github.token }}
+        GH_REF_NAME: ${{ github.ref_name }}
+
   build-vizarr:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    needs:
+      create-release-draft
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up node
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
           node-version: 24
-          cache: npm
-
-      - name: Install pnpm
-        run: npm install -g pnpm@9
-
-      - name: Clone vizarr
-        run: git clone https://github.com/BioNGFF/vizarr
-
+          package-manager-cache: false
+      - run: npm install -g pnpm@9
+      - run: git clone https://github.com/BioNGFF/vizarr
       - name: Checkout vizarr commit
         run: |
           cd vizarr
           git checkout 88b6f8128799cd946e93d46278d31a58e392bd62
-
       - name: Install dependencies
         run: |
           cd vizarr
           pnpm install
-
       - name: Generate build artifacts
         run: |
           cd vizarr
           pnpm run build
-
       - name: Generate the package
         run: |
           cd vizarr
-          tar -czpf fractal-vizarr-${{ github.ref_name }}.tar.gz dist LICENSE
+          tar -czpf "fractal-vizarr-${GH_REF_NAME}.tar.gz" dist LICENSE
+        env:
+          GH_REF_NAME: ${{ github.ref_name }}
 
-      - name: Release
-        uses: softprops/action-gh-release@v2.2.1
-        with:
-          files: vizarr/fractal-vizarr-${{ github.ref_name }}.tar.gz
+      - run: gh release upload "${GH_REF_NAME}" "vizarr/fractal-vizarr-${GH_REF_NAME}.tar.gz"
+        env:
+          GH_REF_NAME: ${{ github.ref_name }}
+          GH_TOKEN: ${{ github.token }}
+
 
   build-server:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    needs:
+      create-release-draft
 
     strategy:
       matrix:
         node-version: ['20', '24']
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up node
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
           node-version: ${{ matrix.node-version }}
-          cache: npm
+          package-manager-cache: false
 
       # Build the non-AWS variant first
-      - name: Install dependencies
-        run: npm install
-
-      - name: Generate build artifacts
-        run: npm run build
-
-      - name: Generate the package
-        run: npm pack
-
-      - name: Extract the package
-        run: tar -xzf fractal-data-*.tgz
+      - run: npm install
+      - run: npm run build
+      - run: npm pack
+      - run: tar -xzf fractal-data-*.tgz
 
       - name: Repack the package removing parent folder
-        run: tar -C package -czf node-${{ matrix.node-version }}-fractal-data-${{ github.ref_name }}.tar.gz dist package.json node_modules LICENSE
+        run: tar -C package -czf "node-${{ matrix.node-version }}-fractal-data-${GH_REF_NAME}.tar.gz" dist package.json node_modules LICENSE
+        env:
+          GH_REF_NAME: ${{ github.ref_name }}
 
-      # Save first artifact before cleaning up
-      - name: Save non-AWS artifact
-        run: mv node-${{ matrix.node-version }}-fractal-data-${{ github.ref_name }}.tar.gz /tmp/
+      - run: gh release upload "${GH_REF_NAME}" "node-${{ matrix.node-version }}-fractal-data-${GH_REF_NAME}.tar.gz"
+        env:
+          GH_REF_NAME: ${{ github.ref_name }}
+          GH_TOKEN: ${{ github.token }}
 
       # Clean up
       - name: Clean up for AWS variant
@@ -105,30 +116,37 @@ jobs:
         run: git clean -fdx -e .cache/
 
       # Build the AWS variant
-      - name: Install dependencies with AWS SDK
-        run: npm run install:aws
-
-      - name: Rebuild
-        run: npm run build
+      - run: npm run install:aws
+      - run: npm run build
 
       - name: Add AWS SDK to bundleDependencies and repack
         run: |
           npm pkg set 'bundleDependencies[]'='@aws-sdk/client-s3'
           npm pack
 
-      - name: Extract the AWS package
-        run: tar -xzf fractal-data-*.tgz
+      - run: tar -xzf fractal-data-*.tgz
 
       - name: Repack the package with AWS SDK
-        run: tar -C package -czf node-${{ matrix.node-version }}-fractal-data-with-aws-${{ github.ref_name }}.tar.gz dist package.json node_modules LICENSE
+        run: tar -C package -czf "node-${{ matrix.node-version }}-fractal-data-with-aws-${GH_REF_NAME}.tar.gz" dist package.json node_modules LICENSE
+        env:
+          GH_REF_NAME: ${{ github.ref_name }}
 
-      # Restore non-AWS artifact
-      - name: Restore non-AWS artifact
-        run: mv /tmp/node-${{ matrix.node-version }}-fractal-data-${{ github.ref_name }}.tar.gz .
+      - run: gh release upload "${GH_REF_NAME}" "node-${{ matrix.node-version }}-fractal-data-with-aws-${GH_REF_NAME}.tar.gz"
+        env:
+          GH_REF_NAME: ${{ github.ref_name }}
+          GH_TOKEN: ${{ github.token }}
 
-      - name: Release
-        uses: softprops/action-gh-release@v2
+
+  publish-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    needs: [build-vizarr, build-server]
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
-          files: |
-            node-${{ matrix.node-version }}-fractal-data-${{ github.ref_name }}.tar.gz
-            node-${{ matrix.node-version }}-fractal-data-with-aws-${{ github.ref_name }}.tar.gz
+          persist-credentials: false
+      - run: gh release edit "${GH_REF_NAME}" --draft=false
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REF_NAME: ${{ github.ref_name }}
