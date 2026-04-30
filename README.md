@@ -83,6 +83,7 @@ To start the application installed in this way see the section [Run fractal-data
 - `LOG_LEVEL_CONSOLE`: the log level of logs that will be written to the console; the default value is `info`;
 - `LOG_FILE`: the path of the file where logs will be written; by default is unset and no file will be created;
 - `LOG_LEVEL_FILE`: the log level of logs that will be written to the file; the default value is `info`;
+- `LOG_CONFIG_FILE`: the path of a custom log4js configuration file; if this variable is set, the configuration specified in the file will be used instead of the default one, and `LOG_LEVEL_CONSOLE`, `LOG_FILE` and `LOG_LEVEL_FILE` will be ignored.
 
 ## Run fractal-data from the build folder
 

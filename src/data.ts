@@ -133,16 +133,33 @@ export async function serveZarrData(
           return res.status(404).send("Not Found").end();
         }
         if (s3Error.name === 'AccessDenied' || s3Error.$metadata?.httpStatusCode === 403) {
-          logger.info("Access denied to S3 object: %s", completePath);
+          logger.error(
+            "S3 access denied for %s (bucket=%s, key=%s, requestId=%s); check server S3 credentials/bucket policy",
+            completePath,
+            bucket,
+            key,
+            s3Error.$metadata?.requestId
+          );
           return res.status(403).send("Forbidden").end();
         }
         if (s3Error.name === 'ExpiredToken') {
-          logger.info("Expired token for S3 access: %s", completePath);
+          logger.error(
+            "S3 credentials expired while fetching %s (requestId=%s); refresh server S3 credentials",
+            completePath,
+            s3Error.$metadata?.requestId
+          );
           return res.status(401).send("Unauthorized - Expired token").end();
         }
         else {
-          logger.info("Unexpected S3 error: %s", completePath);
-          return res.status(500).send(`Internal Server Error: ${s3Error.message}`).end();
+          logger.error(
+            "Unexpected S3 error for %s (name=%s, statusCode=%s, requestId=%s): %s",
+            completePath,
+            s3Error.name,
+            s3Error.$metadata?.httpStatusCode,
+            s3Error.$metadata?.requestId,
+            s3Error.message
+          );
+          return res.status(500).send("Internal Server Error").end();
         }
       }
     }
