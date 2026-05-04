@@ -64,7 +64,7 @@ function loadConfig(): Config {
   logger.debug("CACHE_EXPIRATION_TIME: %d", cacheExpirationTime);
 
   if (vizarrStaticFilesPath) {
-    logger.debug("VIZARR_STATIC_FILES_PATH: %s", vizarrStaticFilesPath);
+    logger.info("VIZARR_STATIC_FILES_PATH: %s", vizarrStaticFilesPath);
     if (!fs.existsSync(vizarrStaticFilesPath)) {
       logger.error(
         'VIZARR_STATIC_FILES_PATH="%s" does not exist',
@@ -73,7 +73,7 @@ function loadConfig(): Config {
       process.exit(1);
     }
   } else {
-    logger.debug("VIZARR_STATIC_FILES_PATH not set");
+    logger.info("VIZARR_STATIC_FILES_PATH not set");
   }
 
   return {
