@@ -1,4 +1,5 @@
 import * as dotenv from "dotenv";
+import fs from 'fs';
 import { getLogger } from "./logger.js";
 import { AuthorizationScheme, Config } from "./types";
 
@@ -63,7 +64,16 @@ function loadConfig(): Config {
   logger.debug("CACHE_EXPIRATION_TIME: %d", cacheExpirationTime);
 
   if (vizarrStaticFilesPath) {
-    logger.debug("VIZARR_STATIC_FILES_PATH: %s", vizarrStaticFilesPath);
+    logger.info("VIZARR_STATIC_FILES_PATH: %s", vizarrStaticFilesPath);
+    if (!fs.existsSync(vizarrStaticFilesPath)) {
+      logger.error(
+        'VIZARR_STATIC_FILES_PATH="%s" does not exist',
+        vizarrStaticFilesPath,
+      );
+      process.exit(1);
+    }
+  } else {
+    logger.info("VIZARR_STATIC_FILES_PATH not set");
   }
 
   return {
