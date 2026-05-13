@@ -172,7 +172,7 @@ describe("Serving data", () => {
     const s3Mock = mockClient(S3Client);
 
     let callCount = 0;
-    s3Mock.on(GetObjectCommand).callsFake((input) => {
+    s3Mock.on(GetObjectCommand).callsFake(() => {
       callCount++;
       if (callCount === 1) {
         // First call - no range, return full content

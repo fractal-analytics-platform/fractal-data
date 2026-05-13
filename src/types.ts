@@ -7,8 +7,6 @@ export type Config = {
   basePath: string;
   authorizationScheme: AuthorizationScheme;
   cacheExpirationTime: number;
-  testingUsername: string | null;
-  testingPassword: string | null;
   vizarrStaticFilesPath: string | undefined;
 };
 

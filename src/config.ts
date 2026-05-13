@@ -40,9 +40,6 @@ function loadConfig(): Config {
     );
     process.exit(1);
   }
-
-  let testingUsername: string | null = null;
-  let testingPassword: string | null = null;
   
   // Cookie cache TTL in seconds
   const cacheExpirationTime = process.env.CACHE_EXPIRATION_TIME
@@ -83,8 +80,6 @@ function loadConfig(): Config {
     basePath,
     authorizationScheme: authorizationScheme as AuthorizationScheme,
     cacheExpirationTime,
-    testingUsername,
-    testingPassword,
     vizarrStaticFilesPath,
   };
 }

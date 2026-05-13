@@ -69,9 +69,9 @@ export async function serveZarrData(
 
       const stats = await fsp.stat(completePath);
       const ranges = req.range(stats.size);
-      let options = getRangeOptions(ranges, stats.size, res);
+      const options = getRangeOptions(ranges, stats.size, res);
 
-      //if range is invalid, get the whole object and returns 416
+      // if range is invalid, get the whole object and return 416
       const stream = fs.createReadStream(completePath, options);
       stream.pipe(res);
     }
@@ -90,7 +90,7 @@ export async function serveZarrData(
       let bucket: string = "";
       let key: string = "";
       try {
-        const s3Match = completePath.match(/^s3:\/\/([^\/]+)\/(.+)$/);
+        const s3Match = completePath.match(/^s3:\/\/([^/]+)\/(.+)$/);
         if (!s3Match) {
           const errorMsg = `Invalid S3 URI format: ${completePath}. Expected format: s3://bucket/key`;
           logger.info(errorMsg);
@@ -112,7 +112,7 @@ export async function serveZarrData(
         });
         const objectSize = Number(s3Response.ContentLength);
         const ranges = req.range(objectSize);
-        let options = getRangeOptions(ranges, objectSize, res);
+        const options = getRangeOptions(ranges, objectSize, res);
         // For range requests, fetch only the requested range from S3
         if (options && 'start' in options && 'end' in options) {
           const rangeResponse = await s3Client.getObject({
