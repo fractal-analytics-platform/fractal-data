@@ -99,7 +99,7 @@ export async function serveZarrData(
         bucket = s3Match[1];
         key = s3Match[2];
       }
-      catch (parseError) {
+      catch {
         logger.info("Invalid S3 path: %s", completePath);
         return res.status(400).send("Invalid S3 path").end();
       }
