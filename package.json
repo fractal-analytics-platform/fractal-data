@@ -4,7 +4,9 @@
   "description": "",
   "main": "dist/app.js",
   "scripts": {
-    "lint": "eslint . --ext .ts",
+    "lint": "prettier --check . && eslint . --ext .ts",
+    "format": "prettier --write .",
+    "pre-commit": "lint-staged",
     "build": "tsc",
     "start": "tsc && node dist/app.js",
     "test": "vitest",
@@ -19,6 +21,7 @@
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "aws-sdk-client-mock": "^4.1.0",
     "eslint": "^9.0.0",
+    "lint-staged": "^16.4.0",
     "prettier": "^3.0.0",
     "typescript": "^5.3.3",
     "vitest": "^3.0.0"
