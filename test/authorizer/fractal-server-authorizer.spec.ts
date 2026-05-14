@@ -41,17 +41,17 @@ describe("Viewer paths authorizer", () => {
               "/path/to/project",
               "/path/to/zarr/data/foo",
               "/path/to/zarr/data/bar",
-            ])
+            ]),
           ),
       });
     const request = getMockedRequestWithCookie(
       "/path/to/zarr/data/foo/xxx",
-      "token-user-1"
+      "token-user-1",
     );
     const validUser = await authorizer.isUserValid(request);
     const authorizedUser = await authorizer.isUserAuthorized(
       "/path/to/zarr/data/foo/xxx",
-      request
+      request,
     );
     expect(validUser).toBeTruthy();
     expect(authorizedUser).toBeTruthy();
@@ -70,17 +70,17 @@ describe("Viewer paths authorizer", () => {
         status: 200,
         json: () =>
           new Promise((resolve) =>
-            resolve(["/path/to/project", "/path/to/zarr/data/bar"])
+            resolve(["/path/to/project", "/path/to/zarr/data/bar"]),
           ),
       });
     const request = getMockedRequestWithToken(
       "/path/to/project/xxx",
-      "token-user-2"
+      "token-user-2",
     );
     const validUser = await authorizer.isUserValid(request);
     const authorizedUser = await authorizer.isUserAuthorized(
       "/path/to/project/xxx",
-      request
+      request,
     );
     expect(validUser).toBeTruthy();
     expect(authorizedUser).toBeTruthy();
@@ -89,12 +89,12 @@ describe("Viewer paths authorizer", () => {
   it("Allowed user with forbidden path", async () => {
     const request = getMockedRequestWithToken(
       "/path/to/forbidden",
-      "token-user-1"
+      "token-user-1",
     );
     const validUser = await authorizer.isUserValid(request);
     const authorizedUser = await authorizer.isUserAuthorized(
       "/path/to/forbidden",
-      request
+      request,
     );
     expect(validUser).toBeTruthy();
     expect(authorizedUser).toBeFalsy();
@@ -105,7 +105,7 @@ describe("Viewer paths authorizer", () => {
     const validUser = await authorizer.isUserValid(request);
     const authorizedUser = await authorizer.isUserAuthorized(
       "/path/to/zarr/data/foo/xxx",
-      request
+      request,
     );
     expect(validUser).toBeFalsy();
     expect(authorizedUser).toBeFalsy();
@@ -126,12 +126,12 @@ describe("Viewer paths authorizer", () => {
       });
     const request = getMockedRequestWithCookie(
       "/path/to/zarr/data/foo/xxx",
-      "token-user-3"
+      "token-user-3",
     );
     const validUser = await authorizer.isUserValid(request);
     const authorizedUser = await authorizer.isUserAuthorized(
       "/path/to/zarr/data/foo/xxx",
-      request
+      request,
     );
     expect(validUser).toBeTruthy();
     expect(authorizedUser).toBeFalsy();

@@ -46,7 +46,9 @@ describe("Serving data", () => {
     const authorizer = mockAuthorizer(true, true);
     await serveZarrData(authorizer, request, response);
     expect(response.status).toHaveBeenCalledWith(400);
-    expect(response.send).toHaveBeenCalledWith("Invalid S3 URI format: s3://bucket. Expected format: s3://bucket/key");
+    expect(response.send).toHaveBeenCalledWith(
+      "Invalid S3 URI format: s3://bucket. Expected format: s3://bucket/key",
+    );
   });
 
   it("Unauthorized request", async () => {
@@ -105,7 +107,6 @@ describe("Serving data", () => {
     expect(response.status).toHaveBeenCalledWith(404);
   });
 
-
   it("File is directory", async () => {
     const request = getAnonymousMockedRequest(`${tmpDir}/directory`);
     const response = getMockedResponse();
@@ -158,7 +159,7 @@ describe("Serving data", () => {
     expect(response.status).toHaveBeenCalledWith(206);
     expect(response.setHeader).toHaveBeenCalledWith(
       "Content-Range",
-      "bytes 1-3/6"
+      "bytes 1-3/6",
     );
     expect(response.setHeader).toHaveBeenCalledWith("Content-Length", 3);
     await vi.waitUntil(() => response.body === "123");
@@ -172,7 +173,7 @@ describe("Serving data", () => {
     const s3Mock = mockClient(S3Client);
 
     let callCount = 0;
-    s3Mock.on(GetObjectCommand).callsFake((input) => {
+    s3Mock.on(GetObjectCommand).callsFake(() => {
       callCount++;
       if (callCount === 1) {
         // First call - no range, return full content
@@ -206,12 +207,11 @@ describe("Serving data", () => {
     expect(response.status).toHaveBeenCalledWith(206);
     expect(response.setHeader).toHaveBeenCalledWith(
       "Content-Range",
-      "bytes 1-3/6"
+      "bytes 1-3/6",
     );
     expect(response.setHeader).toHaveBeenCalledWith("Content-Length", 3);
     await vi.waitUntil(() => response.body === "123");
   });
-
 });
 
 import { getRangeOptions } from "../src/data.js";
@@ -225,7 +225,7 @@ describe("getRangeOptions", () => {
 
   it("should return 416 if range is invalid", () => {
     const response = getMockedResponse();
-    const ranges = Object.assign([{ start: 2, end: 20 }], { type: 'bytes' });
+    const ranges = Object.assign([{ start: 2, end: 20 }], { type: "bytes" });
     const options = getRangeOptions(ranges, 6, response);
     expect(options).toEqual({});
     expect(response.status).toHaveBeenCalledWith(416);
@@ -233,15 +233,17 @@ describe("getRangeOptions", () => {
 
   it("should return correct options for valid range", () => {
     const response = getMockedResponse();
-    const ranges = Object.assign([{ start: 2, end: 5 }], { type: 'bytes' });
+    const ranges = Object.assign([{ start: 2, end: 5 }], { type: "bytes" });
     const options = getRangeOptions(ranges, 6, response);
     expect(options).toEqual({ start: 2, end: 5 });
     expect(response.status).not.toHaveBeenCalledWith(416);
     expect(response.setHeader).toHaveBeenCalledWith("Content-Length", 4);
-    expect(response.setHeader).toHaveBeenCalledWith("Content-Range", "bytes 2-5/6");
+    expect(response.setHeader).toHaveBeenCalledWith(
+      "Content-Range",
+      "bytes 2-5/6",
+    );
   });
 });
-
 
 function mockAuthorizer(valid: boolean, authorized: boolean): Authorizer {
   return {

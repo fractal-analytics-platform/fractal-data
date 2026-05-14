@@ -4,9 +4,13 @@ import { getValidPath, isSubfolder } from "../src/path";
 
 describe("Path utilities", () => {
   it("isSubfolder", () => {
-    expect(isSubfolder("/path/to/parent", "/path/to/parent/child")).toBeTruthy();
+    expect(
+      isSubfolder("/path/to/parent", "/path/to/parent/child"),
+    ).toBeTruthy();
     expect(isSubfolder("/path/to/parent", "/another/path")).toBeFalsy();
-    expect(isSubfolder("/path/to/parent", "/path/to/parent/../other")).toBeFalsy();
+    expect(
+      isSubfolder("/path/to/parent", "/path/to/parent/../other"),
+    ).toBeFalsy();
   });
 
   it("valid path with URL encoded characters", async () => {
@@ -19,5 +23,4 @@ describe("Path utilities", () => {
     const path = getValidPath(request);
     expect(path).toEqual("s3://bucket/key");
   });
-
 });

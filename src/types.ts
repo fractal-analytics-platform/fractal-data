@@ -1,4 +1,4 @@
-export type AuthorizationScheme = "fractal-server"
+export type AuthorizationScheme = "fractal-server";
 
 export type Config = {
   port: number;
@@ -7,8 +7,6 @@ export type Config = {
   basePath: string;
   authorizationScheme: AuthorizationScheme;
   cacheExpirationTime: number;
-  testingUsername: string | null;
-  testingPassword: string | null;
   vizarrStaticFilesPath: string | undefined;
 };
 

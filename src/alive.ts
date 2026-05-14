@@ -7,7 +7,6 @@ const config = getConfig();
 const logger = getLogger();
 
 export async function aliveEndpoint(_: Request, res: Response) {
-
   // reading version from package.json
   const require = createRequire(import.meta.url);
   const { version } = require("../package.json");
@@ -27,5 +26,12 @@ export async function aliveEndpoint(_: Request, res: Response) {
     logger.error("Error reading fractal-server alive endpoint");
   }
 
-  res.json({ alive: true, version, fractal_server_alive, fractal_server_version }).end();
+  res
+    .json({
+      alive: true,
+      version,
+      fractal_server_alive,
+      fractal_server_version,
+    })
+    .end();
 }

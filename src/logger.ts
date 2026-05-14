@@ -1,56 +1,59 @@
-import { readFileSync } from 'fs';
-import log4js, { Logger } from 'log4js';
+import { readFileSync } from "fs";
+import log4js, { Logger } from "log4js";
 
 function getLayout(pattern: string) {
   return {
-    type: 'pattern',
+    type: "pattern",
     pattern,
     tokens: {
       timestamp: function (logEvent) {
         return logEvent.startTime
           .toISOString()
-          .replace('T', ' ')
-          .replace('Z', '')
-          .replace('.', ',');
+          .replace("T", " ")
+          .replace("Z", "")
+          .replace(".", ",");
       },
       component: function (logEvent) {
-        return logEvent.context?.component || 'general';
-      }
-    }
+        return logEvent.context?.component || "general";
+      },
+    },
   };
 }
 
-function initLogger(logLevelConsole = 'info', logLevelFile = 'info', logFile: string | undefined = undefined) {
-
+function initLogger(
+  logLevelConsole = "info",
+  logLevelFile = "info",
+  logFile: string | undefined = undefined,
+) {
   let appenders: { [name: string]: log4js.Appender } = {
     console: {
-      type: 'console',
-      layout: getLayout('%[%x{timestamp} - %p -%] %m')
+      type: "console",
+      layout: getLayout("%[%x{timestamp} - %p -%] %m"),
     },
     filteredConsole: {
-      type: 'logLevelFilter',
+      type: "logLevelFilter",
       level: logLevelConsole,
-      appender: 'console'
-    }
+      appender: "console",
+    },
   };
 
-  let appendersList = ['filteredConsole'];
+  let appendersList = ["filteredConsole"];
 
   if (logFile) {
     appenders = {
       ...appenders,
       file: {
-        type: 'file',
+        type: "file",
         filename: logFile,
-        layout: getLayout('%x{timestamp} - %p - %m')
+        layout: getLayout("%x{timestamp} - %p - %m"),
       },
       filteredFile: {
-        type: 'logLevelFilter',
+        type: "logLevelFilter",
         level: logLevelFile,
-        appender: 'file'
-      }
+        appender: "file",
+      },
     };
-    appendersList = [...appendersList, 'filteredFile'];
+    appendersList = [...appendersList, "filteredFile"];
   }
 
   log4js.configure({
@@ -58,21 +61,21 @@ function initLogger(logLevelConsole = 'info', logLevelFile = 'info', logFile: st
     categories: {
       default: {
         appenders: appendersList,
-        level: 'all'
-      }
-    }
+        level: "all",
+      },
+    },
   });
 
   const logger = log4js.getLogger();
 
-  logger.debug('LOG_LEVEL_CONSOLE=%s', logLevelConsole);
+  logger.debug("LOG_LEVEL_CONSOLE=%s", logLevelConsole);
   if (logFile) {
-    logger.debug('LOG_FILE=%s', logFile);
-    logger.debug('LOG_LEVEL_FILE=%s', logLevelFile);
+    logger.debug("LOG_FILE=%s", logFile);
+    logger.debug("LOG_LEVEL_FILE=%s", logLevelFile);
   }
 
-  process.on('unhandledRejection', (error) => {
-    log4js.getLogger().fatal('Unhandled rejection:', error);
+  process.on("unhandledRejection", (error) => {
+    log4js.getLogger().fatal("Unhandled rejection:", error);
   });
 
   return logger;
@@ -84,14 +87,18 @@ export function getLogger() {
   if (logger === null) {
     const configPath = process.env.LOG_CONFIG_FILE;
     if (configPath) {
-      log4js.configure(JSON.parse(readFileSync(configPath, 'utf-8')));
+      log4js.configure(JSON.parse(readFileSync(configPath, "utf-8")));
       logger = log4js.getLogger();
-      logger.debug('LOG_CONFIG_FILE=%s', configPath);
-      process.on('unhandledRejection', (error) => {
-        log4js.getLogger().fatal('Unhandled rejection:', error);
+      logger.debug("LOG_CONFIG_FILE=%s", configPath);
+      process.on("unhandledRejection", (error) => {
+        log4js.getLogger().fatal("Unhandled rejection:", error);
       });
     } else {
-      logger = initLogger(process.env.LOG_LEVEL_CONSOLE, process.env.LOG_LEVEL_FILE, process.env.LOG_FILE);
+      logger = initLogger(
+        process.env.LOG_LEVEL_CONSOLE,
+        process.env.LOG_LEVEL_FILE,
+        process.env.LOG_FILE,
+      );
     }
   }
   return logger;

@@ -38,12 +38,16 @@ describe("logger configuration", () => {
       configFile,
       JSON.stringify({
         appenders: {
-          file: { type: "file", filename: logFile, layout: { type: "messagePassThrough" } }
+          file: {
+            type: "file",
+            filename: logFile,
+            layout: { type: "messagePassThrough" },
+          },
         },
         categories: {
-          default: { appenders: ["file"], level: "warn" }
-        }
-      })
+          default: { appenders: ["file"], level: "warn" },
+        },
+      }),
     );
     process.env.LOG_CONFIG_FILE = configFile;
 
