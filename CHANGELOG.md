@@ -6,6 +6,7 @@ Note: Numbers like (#123) point to closed Pull Requests on the fractal-vizarr-vi
 - Exit if `VIZARR_STATIC_FILES_PATH` is set but does not exist (\#95).
 - Testing:
   - Harden GitHub Action based on `zizmor` (\#90).
+- Add prettier and eslint (\#97).
 
 # 0.6.0
 
