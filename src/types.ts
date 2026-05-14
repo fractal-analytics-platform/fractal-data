@@ -1,4 +1,4 @@
-export type AuthorizationScheme = "fractal-server"
+export type AuthorizationScheme = "fractal-server";
 
 export type Config = {
   port: number;

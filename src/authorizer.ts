@@ -27,7 +27,7 @@ export function getAuthorizer() {
     default:
       logger.error(
         "Unsupported authorization scheme %s",
-        config.authorizationScheme
+        config.authorizationScheme,
       );
       process.exit(1);
   }
@@ -63,9 +63,8 @@ export class FractalServerAuthorizer implements Authorizer {
     }
     loadingViewerPaths.push(token);
     try {
-      let allowedPaths: string[] | undefined = await viewerPathsCache.get(
-        token
-      );
+      let allowedPaths: string[] | undefined =
+        await viewerPathsCache.get(token);
       if (allowedPaths === undefined) {
         logger.trace("Retrieving allowed viewer paths for user %s", user.email);
         const response = await fetch(
@@ -74,21 +73,21 @@ export class FractalServerAuthorizer implements Authorizer {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
         if (response.ok) {
           allowedPaths = (await response.json()) as string[];
           logger.trace(
             "Retrieved %d allowed viewer paths for user %s",
             allowedPaths.length,
-            user.email
+            user.email,
           );
           viewerPathsCache.set(token, allowedPaths);
         } else {
           logger.debug(
             "Fractal server replied with %d while retrieving allowed viewer paths for user %s",
             response.status,
-            user.email
+            user.email,
           );
           return false;
         }

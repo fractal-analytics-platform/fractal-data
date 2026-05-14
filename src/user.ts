@@ -17,7 +17,7 @@ const tokensCache = await caching("memory", { ttl });
 let loadingTokens: string[] = [];
 
 export async function getUserFromRequest(
-  req: Request
+  req: Request,
 ): Promise<{ token: string; user: User } | undefined> {
   const token = getUserTokenFromRequest(req);
   if (!token) {
@@ -42,7 +42,7 @@ export async function getUserFromRequest(
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       if (response.ok) {
         user = (await response.json()) as User;
@@ -51,7 +51,7 @@ export async function getUserFromRequest(
       } else {
         logger.debug(
           "Fractal server replied with %d while retrieving user from token",
-          response.status
+          response.status,
         );
       }
     }

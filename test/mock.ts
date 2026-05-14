@@ -5,11 +5,11 @@ import { Writable } from "node:stream";
 
 export function mockConfig(config: Partial<Config>) {
   const getConfig = () =>
-  ({
-    basePath: "/data",
-    fractalServerUrl: "http://localhost:8000",
-    ...config,
-  } as Config);
+    ({
+      basePath: "/data",
+      fractalServerUrl: "http://localhost:8000",
+      ...config,
+    }) as Config;
   return {
     getConfig,
   };
@@ -36,7 +36,7 @@ export function getMockedResponse() {
 export function getAnonymousMockedRequest(path: string) {
   return {
     path,
-    get: () => { },
+    get: () => {},
     range: () => undefined,
   } as unknown as Request;
 }
@@ -67,7 +67,7 @@ export function getMockedRequestWithCookie(path: string, token: string) {
 
 export function getMockedRequestWithRange(
   path: string,
-  value: { start: number; end: number } | undefined
+  value: { start: number; end: number } | undefined,
 ) {
   return {
     path,

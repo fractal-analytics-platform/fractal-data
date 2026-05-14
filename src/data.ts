@@ -8,7 +8,6 @@ import { Authorizer } from "./authorizer.js";
 
 const logger = getLogger();
 
-
 let s3: any | null = null;
 let s3LoadAttempted = false;
 
@@ -40,11 +39,11 @@ async function getS3Client(): Promise<any> {
 export async function serveZarrData(
   authorizer: Authorizer,
   req: Request,
-  res: Response
+  res: Response,
 ) {
   try {
     const completePath = getValidPath(req);
-    const is_s3 = completePath.startsWith('s3://');
+    const is_s3 = completePath.startsWith("s3://");
     const validUser = await authorizer.isUserValid(req);
     if (!validUser) {
       logger.info("Unauthorized request: %s", req.path.normalize());
@@ -56,7 +55,6 @@ export async function serveZarrData(
       return res.status(403).send("Forbidden").end();
     }
     if (!is_s3) {
-
       if (!fs.existsSync(completePath)) {
         logger.info("File not found: %s", completePath);
         return res.status(404).send("Not Found").end();
@@ -74,14 +72,16 @@ export async function serveZarrData(
       // if range is invalid, get the whole object and return 416
       const stream = fs.createReadStream(completePath, options);
       stream.pipe(res);
-    }
-    else {
+    } else {
       let s3Client: any;
       try {
         s3Client = await getS3Client();
       } catch (e) {
         if (e instanceof S3UnavailableError) {
-          return res.status(501).send("Not Implemented - S3 support is not installed.").end();
+          return res
+            .status(501)
+            .send("Not Implemented - S3 support is not installed.")
+            .end();
         }
         throw e;
       }
@@ -98,27 +98,25 @@ export async function serveZarrData(
         }
         bucket = s3Match[1];
         key = s3Match[2];
-      }
-      catch {
+      } catch {
         logger.info("Invalid S3 path: %s", completePath);
         return res.status(400).send("Invalid S3 path").end();
       }
 
       try {
-
         const s3Response = await s3Client.getObject({
           Bucket: bucket,
-          Key: key
+          Key: key,
         });
         const objectSize = Number(s3Response.ContentLength);
         const ranges = req.range(objectSize);
         const options = getRangeOptions(ranges, objectSize, res);
         // For range requests, fetch only the requested range from S3
-        if (options && 'start' in options && 'end' in options) {
+        if (options && "start" in options && "end" in options) {
           const rangeResponse = await s3Client.getObject({
             Bucket: bucket,
             Key: key,
-            Range: `bytes=${options.start}-${options.end}`
+            Range: `bytes=${options.start}-${options.end}`,
           });
           const rangeStream = rangeResponse.Body as NodeJS.ReadableStream;
           rangeStream.pipe(res);
@@ -128,55 +126,64 @@ export async function serveZarrData(
           s3Stream.pipe(res);
         }
       } catch (s3Error) {
-        if (s3Error.name === 'NoSuchKey' || s3Error.$metadata?.httpStatusCode === 404) {
+        if (
+          s3Error.name === "NoSuchKey" ||
+          s3Error.$metadata?.httpStatusCode === 404
+        ) {
           logger.info("S3 object not found: %s", completePath);
           return res.status(404).send("Not Found").end();
         }
-        if (s3Error.name === 'AccessDenied' || s3Error.$metadata?.httpStatusCode === 403) {
+        if (
+          s3Error.name === "AccessDenied" ||
+          s3Error.$metadata?.httpStatusCode === 403
+        ) {
           logger.error(
             "S3 access denied for %s (bucket=%s, key=%s, requestId=%s); check server S3 credentials/bucket policy",
             completePath,
             bucket,
             key,
-            s3Error.$metadata?.requestId
+            s3Error.$metadata?.requestId,
           );
           return res.status(403).send("Forbidden").end();
         }
-        if (s3Error.name === 'ExpiredToken') {
+        if (s3Error.name === "ExpiredToken") {
           logger.error(
             "S3 credentials expired while fetching %s (requestId=%s); refresh server S3 credentials",
             completePath,
-            s3Error.$metadata?.requestId
+            s3Error.$metadata?.requestId,
           );
           return res.status(401).send("Unauthorized - Expired token").end();
-        }
-        else {
+        } else {
           logger.error(
             "Unexpected S3 error for %s (name=%s, statusCode=%s, requestId=%s): %s",
             completePath,
             s3Error.name,
             s3Error.$metadata?.httpStatusCode,
             s3Error.$metadata?.requestId,
-            s3Error.message
+            s3Error.message,
           );
           return res.status(500).send("Internal Server Error").end();
         }
       }
     }
-  }
-  catch (err) {
+  } catch (err) {
     logger.error("Error reading file", err);
     return res.status(500).send("Internal Server Error").end();
   }
 }
 
-export function getRangeOptions(ranges: Ranges | RangeParserResult | undefined, size: number, res: Response) {
+export function getRangeOptions(
+  ranges: Ranges | RangeParserResult | undefined,
+  size: number,
+  res: Response,
+) {
   let options = {};
   if (ranges && Array.isArray(ranges) && ranges.length === 1) {
     const [range] = ranges;
     const { start, end } = range;
     logger.trace("Requested byte range [%d, %d]", start, end);
-    if (start >= size || end >= size) { // ranges are 0-indexed
+    if (start >= size || end >= size) {
+      // ranges are 0-indexed
       res.setHeader("Content-Range", `bytes */${size}`);
       res.status(416);
       return options;

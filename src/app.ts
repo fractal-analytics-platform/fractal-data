@@ -33,7 +33,7 @@ app.use(`${config.basePath}alive`, async function (req, res) {
 if (config.vizarrStaticFilesPath) {
   app.use(
     `${config.basePath}vizarr`,
-    express.static(config.vizarrStaticFilesPath)
+    express.static(config.vizarrStaticFilesPath),
   );
 }
 
@@ -42,7 +42,7 @@ const server = app.listen(config.port, config.bindAddress, () => {
   logger.info(
     "fractal-data is listening at http://localhost:%d%s",
     config.port,
-    config.basePath
+    config.basePath,
   );
 });
 

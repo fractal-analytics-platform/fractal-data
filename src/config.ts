@@ -1,5 +1,5 @@
 import * as dotenv from "dotenv";
-import fs from 'fs';
+import fs from "fs";
 import { getLogger } from "./logger.js";
 import { AuthorizationScheme, Config } from "./types";
 
@@ -13,7 +13,7 @@ function getRequiredEnv(envName: string) {
   if (!value) {
     logger.error(
       "Missing required environment variable %s. Check the configuration.",
-      envName
+      envName,
     );
     process.exit(1);
   }
@@ -28,19 +28,17 @@ function loadConfig(): Config {
   const bindAddress = process.env.BIND_ADDRESS || "0.0.0.0";
   const fractalServerUrl = getRequiredEnv("FRACTAL_SERVER_URL");
 
-  const validAuthorizationSchemes = [
-    "fractal-server",
-  ];
+  const validAuthorizationSchemes = ["fractal-server"];
   const authorizationScheme = getRequiredEnv("AUTHORIZATION_SCHEME");
   if (!validAuthorizationSchemes.includes(authorizationScheme)) {
     logger.error(
       'Invalid authorization scheme "%s", allowed values: %s',
       authorizationScheme,
-      validAuthorizationSchemes.map((v) => `"${v}"`).join(", ")
+      validAuthorizationSchemes.map((v) => `"${v}"`).join(", "),
     );
     process.exit(1);
   }
-  
+
   // Cookie cache TTL in seconds
   const cacheExpirationTime = process.env.CACHE_EXPIRATION_TIME
     ? parseInt(process.env.CACHE_EXPIRATION_TIME)

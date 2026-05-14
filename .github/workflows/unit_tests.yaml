@@ -2,21 +2,21 @@ name: Unit tests
 
 on:
   push:
-    branches: ['main', 'ihb-develop']
+    branches: ["main", "ihb-develop"]
   pull_request:
-    branches: ['main', 'ihb-develop']
+    branches: ["main", "ihb-develop"]
 
 permissions: {}
 
 jobs:
   unit_tests:
-    name: 'Node ${{ matrix.node-version }}'
+    name: "Node ${{ matrix.node-version }}"
     runs-on: ubuntu-24.04
     timeout-minutes: 10
 
     strategy:
       matrix:
-        node-version: ['20', '24']
+        node-version: ["20", "24"]
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
