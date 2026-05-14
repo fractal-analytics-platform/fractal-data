@@ -1,0 +1,40 @@
+name: Lint and build
+
+on:
+  push:
+    branches: ["main", "ihb-develop"]
+  pull_request:
+    branches: ["main", "ihb-develop"]
+
+permissions: {}
+
+jobs:
+  lint_and_build:
+    name: "Lint and build - Node ${{ matrix.node-version }}"
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    strategy:
+      matrix:
+        node-version: ["20", "24"]
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+
+      - name: Set up node
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run static code analysis
+        # Run prettier and eslint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
