@@ -33,7 +33,7 @@
     "log4js": "^6.9.1"
   },
   "optionalDependencies": {
-    "@aws-sdk/client-s3": "3.972.0"
+    "@aws-sdk/client-s3": "3.1050.0"
   },
   "files": [
     "dist"
