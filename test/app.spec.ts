@@ -130,12 +130,13 @@ describe("Serving data", () => {
     const { mockClient } = await import("aws-sdk-client-mock");
     const { S3Client, GetObjectCommand } = await import("@aws-sdk/client-s3");
     const { Readable } = await import("stream");
+    const { sdkStreamMixin } = await import("@smithy/core/serde");
     const s3Mock = mockClient(S3Client);
     const stream = new Readable();
     stream.push("012345");
     stream.push(null);
     s3Mock.on(GetObjectCommand).resolves({
-      Body: stream,
+      Body: sdkStreamMixin(stream),
       ContentLength: 6,
     });
 
@@ -169,7 +170,7 @@ describe("Serving data", () => {
     const { mockClient } = await import("aws-sdk-client-mock");
     const { S3Client, GetObjectCommand } = await import("@aws-sdk/client-s3");
     const { Readable } = await import("stream");
-    const { sdkStreamMixin } = await import("@smithy/util-stream");
+    const { sdkStreamMixin } = await import("@smithy/core/serde");
     const s3Mock = mockClient(S3Client);
 
     let callCount = 0;
