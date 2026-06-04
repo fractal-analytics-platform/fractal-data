@@ -23,46 +23,6 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REF_NAME: ${{ github.ref_name }}
 
-  build-vizarr:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    needs: create-release-draft
-
-    steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
-        with:
-          persist-credentials: false
-      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
-        with:
-          node-version: 24
-          package-manager-cache: false
-      - run: npm install -g pnpm@9
-      - run: git clone https://github.com/BioNGFF/vizarr
-      - name: Checkout vizarr commit
-        run: |
-          cd vizarr
-          git checkout 88b6f8128799cd946e93d46278d31a58e392bd62
-      - name: Install dependencies
-        run: |
-          cd vizarr
-          pnpm install
-      - name: Generate build artifacts
-        run: |
-          cd vizarr
-          pnpm run build
-      - name: Generate the package
-        run: |
-          cd vizarr
-          tar -czpf "fractal-vizarr-${GH_REF_NAME}.tar.gz" dist LICENSE
-        env:
-          GH_REF_NAME: ${{ github.ref_name }}
-
-      - run: gh release upload "${GH_REF_NAME}" "vizarr/fractal-vizarr-${GH_REF_NAME}.tar.gz"
-        env:
-          GH_REF_NAME: ${{ github.ref_name }}
-          GH_TOKEN: ${{ github.token }}
-
   build-server:
     runs-on: ubuntu-latest
     permissions:
@@ -136,7 +96,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    needs: [build-vizarr, build-server]
+    needs: [build-server]
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
