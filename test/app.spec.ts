@@ -1,13 +1,22 @@
-import { describe, it, expect, vi, beforeAll, afterAll } from "vitest";
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeAll,
+  afterAll,
+  afterEach,
+} from "vitest";
 import {
   getMockedResponse,
   mockConfig,
   getAnonymousMockedRequest,
   getMockedRequestWithRange,
 } from "./mock";
-import fs from "fs";
+import * as fs from "fs";
 import os from "os";
 import path from "path";
+import { EventEmitter } from "stream";
 
 vi.mock("../src/config.js", () => {
   return mockConfig({
@@ -15,8 +24,18 @@ vi.mock("../src/config.js", () => {
   });
 });
 
+// Allow to call spyOn on fs functions
+vi.mock("fs", async () => {
+  const original = await vi.importActual("fs");
+  return {
+    ...original,
+    createReadStream: original.createReadStream,
+  };
+});
+
 import { serveZarrData } from "../src/data";
 import { Authorizer } from "../src/authorizer";
+import { getRangeOptions } from "../src/data.js";
 
 describe("Serving data", () => {
   const tmpDir = path.join(os.tmpdir(), "fractal-data-app-test");
@@ -26,10 +45,15 @@ describe("Serving data", () => {
     const dir = path.join(tmpDir, "directory");
     fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(path.join(dir, "foo"), "012345");
+    fs.writeFileSync(path.join(dir, "error"), "");
   });
 
   afterAll(() => {
     fs.rmSync(tmpDir, { recursive: true });
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   it("Invalid path request", async () => {
@@ -105,6 +129,27 @@ describe("Serving data", () => {
     const authorizer = mockAuthorizer(true, true);
     await serveZarrData(authorizer, request, response);
     expect(response.status).toHaveBeenCalledWith(404);
+  });
+
+  it("Stream I/O error", async () => {
+    const request = getAnonymousMockedRequest(`${tmpDir}/directory/error`);
+    const response = getMockedResponse();
+    const authorizer = mockAuthorizer(true, true);
+
+    const fakeStream = new EventEmitter();
+    Object.assign(fakeStream, {
+      pipe: () => {
+        fakeStream.emit("error", new Error("I/O error"));
+      },
+    });
+
+    const readStreamSpy = vi
+      .spyOn(fs, "createReadStream")
+      .mockImplementation(() => fakeStream as fs.ReadStream);
+
+    await serveZarrData(authorizer, request, response);
+    expect(readStreamSpy).toHaveBeenCalledTimes(1);
+    expect(response.status).toHaveBeenCalledWith(500);
   });
 
   it("File is directory", async () => {
@@ -215,7 +260,6 @@ describe("Serving data", () => {
   });
 });
 
-import { getRangeOptions } from "../src/data.js";
 describe("getRangeOptions", () => {
   it("should return empty for no range header", () => {
     const response = getMockedResponse();

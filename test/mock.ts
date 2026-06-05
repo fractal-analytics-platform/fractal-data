@@ -22,7 +22,11 @@ class MockResponse extends Writable {
   setHeader = vi.fn();
   end = vi.fn();
 
-  _write(chunk, _, callback) {
+  _write(
+    chunk: any,
+    _: BufferEncoding,
+    callback: (error?: Error | null) => void,
+  ) {
     this.body += chunk.toString();
     callback(); // Indicate the write is complete
   }
