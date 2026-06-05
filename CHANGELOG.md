@@ -3,6 +3,7 @@ Note: Numbers like (#123) point to closed Pull Requests on the `fractal-data` re
 # 0.6.2 (unreleased)
 
 - Drop references to custom vizarr builds (\#103).
+- Handle I/O errors in file read (\#104).
 
 # 0.6.1
 

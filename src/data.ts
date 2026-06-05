@@ -63,6 +63,12 @@ export async function serveZarrData(
         logger.info("Path is directory: %s", completePath);
         return res.status(400).send("Is directory").end();
       }
+      try {
+        await fsp.access(completePath, fs.constants.R_OK);
+      } catch {
+        logger.error("File is not readable: %s", completePath);
+        return res.status(500).send("Internal Server Error").end();
+      }
       logger.trace("Path to load: %s", completePath);
 
       const stats = await fsp.stat(completePath);
@@ -71,6 +77,10 @@ export async function serveZarrData(
 
       // if range is invalid, get the whole object and return 416
       const stream = fs.createReadStream(completePath, options);
+      stream.on("error", (e) => {
+        logger.error("Error reading file: %s, %s", completePath, e);
+        res.status(500).send("Internal Server Error").end();
+      });
       stream.pipe(res);
     } else {
       let s3Client: any;
