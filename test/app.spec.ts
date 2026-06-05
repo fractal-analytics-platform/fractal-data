@@ -46,6 +46,8 @@ describe("Serving data", () => {
     fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(path.join(dir, "foo"), "012345");
     fs.writeFileSync(path.join(dir, "error"), "");
+    fs.writeFileSync(path.join(dir, "not-readable"), "");
+    fs.chmodSync(path.join(dir, "not-readable"), "000");
   });
 
   afterAll(() => {
@@ -149,6 +151,16 @@ describe("Serving data", () => {
 
     await serveZarrData(authorizer, request, response);
     expect(readStreamSpy).toHaveBeenCalledTimes(1);
+    expect(response.status).toHaveBeenCalledWith(500);
+  });
+
+  it("File missing read permission", async () => {
+    const request = getAnonymousMockedRequest(
+      `${tmpDir}/directory/not-readable`,
+    );
+    const response = getMockedResponse();
+    const authorizer = mockAuthorizer(true, true);
+    await serveZarrData(authorizer, request, response);
     expect(response.status).toHaveBeenCalledWith(500);
   });
 

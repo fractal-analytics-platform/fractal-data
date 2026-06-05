@@ -63,6 +63,12 @@ export async function serveZarrData(
         logger.info("Path is directory: %s", completePath);
         return res.status(400).send("Is directory").end();
       }
+      try {
+        await fsp.access(completePath, fs.constants.R_OK);
+      } catch {
+        logger.error("File is not readable: %s", completePath);
+        return res.status(500).send("Internal Server Error").end();
+      }
       logger.trace("Path to load: %s", completePath);
 
       const stats = await fsp.stat(completePath);
