@@ -23,6 +23,7 @@ Currently we support a single `AUTHORIZATION_SCHEME=fractal-server` authorizatio
 ### Accessing files using the token
 
 While in the browser the authentication relies on cookies, that are automatically shared by the browser across Fractal services, for command line and desktop applications it is more appropriate to use bearer tokens. For this reason, files exposed by `fractal-data` can be retrieved both using cookies and tokens. The token can be downloaded from `fractal-web` user profile page. The following example shows an example of usage with `curl`:
+
 ```sh
 curl -H "Authorization: Bearer $(cat /path/to/fractal-token.txt)" http://localhost:3000/files/path/to/file
 ```
@@ -46,14 +47,16 @@ The release packages include the Node.js server and tar.gz files containing a pa
 Vizarr static files can be served using any server, like Apache or Ngnix.
 
 Fetch and extract the Vizarr static files as in
+
 ```
 export VIZARR_VERSION="1.2.1"
 wget "https://github.com/BioNGFF/vizarr/releases/download/v${VIZARR_VERSION}/dist.tar.gz"
 tar -xvf dist.tar.gz
 ```
+
 which then makes them available in `sites/app/dist/`.
 
-Then you may e.g. copy the folder contents into  `/var/www/html/vizarr` (for Apache), or serve Vizarr via `fractal-data` by setting the `VIZARR_STATIC_FILES_PATH` variable.
+Then you may e.g. copy the folder contents into `/var/www/html/vizarr` (for Apache), or serve Vizarr via `fractal-data` by setting the `VIZARR_STATIC_FILES_PATH` variable.
 
 ### Install fractal-data Node.js server files
 
@@ -133,6 +136,7 @@ http://localhost:3000/data?source=http://localhost:3000/data/files/path/to/20200
 ## Production setup
 
 Add an Apache configuration to expose `fractal-data` service on a given path of the public server. The specified location must have the same value set in `fractal-data` `BASE_PATH` environment variable (the default value is `/data`).
+
 ```
 <Location /data>
     ProxyPass http://127.0.0.1:3000/data
@@ -141,6 +145,7 @@ Add an Apache configuration to expose `fractal-data` service on a given path of 
 ```
 
 Add a systemd unit file in `/etc/systemd/system/fractal-data.service`:
+
 ```
 [Unit]
 Description=Fractal Data service
@@ -186,7 +191,6 @@ npm run install:aws
 ```
 
 Copy the file `.env.example` to `.env` and customize values for the environment variables.
-
 
 ### Run fractal-data
 

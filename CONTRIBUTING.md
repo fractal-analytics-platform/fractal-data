@@ -3,6 +3,7 @@
 ## Pre-commit
 
 In your local folder, create a file `.git/hooks/pre-commit` with the following content
+
 ```bash
 #!/bin/bash
 npm run pre-commit
