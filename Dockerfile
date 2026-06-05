@@ -2,16 +2,13 @@ FROM node:20
 
 WORKDIR /
 
-RUN git clone https://github.com/BioNGFF/vizarr
+RUN mkdir /vizarr
 WORKDIR /vizarr
 
-RUN git checkout 88b6f8128799cd946e93d46278d31a58e392bd62
-RUN npm install -g pnpm@9
-RUN pnpm install
-RUN pnpm run build
+RUN wget https://github.com/BioNGFF/vizarr/releases/download/v1.2.1/dist.tar.gz
+RUN tar -xvf dist.tar.gz
 
 RUN mkdir /fractal-data
-
 WORKDIR /fractal-data
 
 ADD src src
@@ -21,6 +18,6 @@ ADD tsconfig.json /fractal-data/
 RUN npm ci
 RUN npm run build
 
-ENV VIZARR_STATIC_FILES_PATH=/vizarr/dist
+ENV VIZARR_STATIC_FILES_PATH=/vizarr/sites/app/dist/
 
 CMD ["node", "/fractal-data/dist/app.js"]
