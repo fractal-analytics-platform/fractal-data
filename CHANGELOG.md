@@ -4,7 +4,6 @@ Note: Numbers like (#123) point to closed Pull Requests on the `fractal-data` re
 
 - Drop references to custom vizarr builds (\#103).
 
-
 # 0.6.1
 
 - Added support for custom log4js configuration file via `LOG_CONFIG_FILE` environment variable (\#93);
