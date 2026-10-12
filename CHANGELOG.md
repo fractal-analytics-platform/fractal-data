@@ -1,5 +1,9 @@
 Note: Numbers like (#123) point to closed Pull Requests on the `fractal-data` repository.
 
+# unreleased
+
+- Support Node 26 (\#124).
+
 # 0.6.3
 
 - Drop Node 20 support (\#106).
