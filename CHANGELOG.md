@@ -4,6 +4,7 @@ Note: Numbers like (#123) point to closed Pull Requests on the `fractal-data` re
 
 - Support Node 26 (\#124).
 - Bump `express` to 5.3.0 and bump `@types/express` to 5.0.6 (\#127).
+- Bump `eslint` to v10, add `@eslint/js`+`@eslint/eslintrc`+`globals` to `devDependencies` (#128).
 
 # 0.6.3
 
