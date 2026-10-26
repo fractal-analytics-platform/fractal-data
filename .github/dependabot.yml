@@ -15,28 +15,26 @@ updates:
         applies-to: security-updates
         patterns:
           - "*"
-  - package-ecosystem: 'npm'
+  - package-ecosystem: "npm"
     # Look for `package.json` and `lock` files in the following directories
     directories:
-      - '/'
+      - "/"
     # Check the npm registry for updates every day (weekdays)
     schedule:
-      interval: 'monthly'
+      interval: "monthly"
     cooldown:
       default-days: 7
     groups:
       version-updates:
         applies-to: version-updates
         patterns:
-          - '*'
+          - "*"
       security-updates:
         applies-to: security-updates
         patterns:
-          - '*'
+          - "*"
     ignore:
-      - dependency-name: 'typescript'
-        update-types: ['version-update:semver-major']
-      - dependency-name: 'marked'
-        update-types: ['version-update:semver-major']
-
-
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "marked"
+        update-types: ["version-update:semver-major"]
