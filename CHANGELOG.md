@@ -1,6 +1,6 @@
 Note: Numbers like (#123) point to closed Pull Requests on the `fractal-data` repository.
 
-# unreleased
+# 0.6.4
 
 - Support Node 26 (\#124).
 - Bump `express` to 5.3.0 and bump `@types/express` to 5.0.6 (\#127).
