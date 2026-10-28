@@ -1,5 +1,5 @@
 import type { Request } from "express";
-import { caching } from "cache-manager";
+import { createCache } from "cache-manager";
 import { getConfig } from "./config.js";
 import { getLogger } from "./logger.js";
 import { User } from "./types";
@@ -10,7 +10,7 @@ const logger = getLogger();
 // cache TTL in milliseconds
 const ttl = config.cacheExpirationTime * 1000;
 
-const tokensCache = await caching("memory", { ttl });
+const tokensCache = createCache({ ttl });
 
 // Track the tokens for which we are retrieving the user info from fractal-server
 // Used to avoid querying the cache while the fetch call is in progress
@@ -47,7 +47,7 @@ export async function getUserFromRequest(
       if (response.ok) {
         user = (await response.json()) as User;
         logger.trace("Retrieved user %s", user.email);
-        tokensCache.set(token, JSON.stringify(user));
+        await tokensCache.set(token, JSON.stringify(user));
       } else {
         logger.debug(
           "Fractal server replied with %d while retrieving user from token",
