@@ -1,5 +1,5 @@
 import type { Request } from "express";
-import { caching } from "cache-manager";
+import { createCache } from "cache-manager";
 import { getConfig } from "./config.js";
 import { getLogger } from "./logger.js";
 import { getUserFromRequest } from "./user.js";
@@ -11,7 +11,7 @@ const logger = getLogger();
 // cache TTL in milliseconds
 const ttl = config.cacheExpirationTime * 1000;
 
-const viewerPathsCache = await caching("memory", { ttl });
+const viewerPathsCache = createCache({ ttl });
 
 // Track the tokens for which we are retrieving the user info from fractal-server
 // Used to avoid querying the cache while the fetch call is in progress
@@ -82,7 +82,7 @@ export class FractalServerAuthorizer implements Authorizer {
             allowedPaths.length,
             user.email,
           );
-          viewerPathsCache.set(token, allowedPaths);
+          await viewerPathsCache.set(token, allowedPaths);
         } else {
           logger.debug(
             "Fractal server replied with %d while retrieving allowed viewer paths for user %s",

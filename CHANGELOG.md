@@ -1,10 +1,14 @@
 Note: Numbers like (#123) point to closed Pull Requests on the `fractal-data` repository.
 
+# Unreleased
+
+- Bump `cache-manager` from v5 to v7 and bump `dotenv` from v16 to v18 (\#131).
+
 # 0.6.4
 
 - Support Node 26 (\#124).
 - Bump `express` to 5.3.0 and bump `@types/express` to 5.0.6 (\#127).
-- Bump `eslint` to v10, add `@eslint/js`+`@eslint/eslintrc`+`globals` to `devDependencies` (#128).
+- Bump `eslint` to v10, add `@eslint/js`+`@eslint/eslintrc`+`globals` to `devDependencies` (\#128).
 
 # 0.6.3
 

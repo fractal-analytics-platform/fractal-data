@@ -20,23 +20,23 @@
     "@eslint/eslintrc": "^3.3.7",
     "@eslint/js": "^10.0.1",
     "@types/express": "^5.0.6",
-    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.72.0",
     "aws-sdk-client-mock": "^4.1.0",
     "eslint": "^10.0.0",
     "globals": "^17.13.0",
-    "lint-staged": "^16.4.0",
-    "prettier": "^3.0.0",
-    "typescript": "^5.3.3",
-    "vitest": "^4.1.12"
+    "lint-staged": "^17.6.0",
+    "prettier": "^3.9.10",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.5"
   },
   "dependencies": {
-    "cache-manager": "^5.7.3",
-    "dotenv": "^16.4.5",
+    "cache-manager": "^7.2.9",
+    "dotenv": "^18.0.8",
     "express": "^5.3.0",
     "log4js": "^6.9.1"
   },
   "optionalDependencies": {
-    "@aws-sdk/client-s3": "3.1053.0"
+    "@aws-sdk/client-s3": "3.1153.0"
   },
   "files": [
     "dist"
